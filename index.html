@@ -1,0 +1,775 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2022.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    span.s1 {font: 12.0px Thonburi}
+    span.s2 {font: 12.0px 'PingFang SC'}
+    span.s3 {font: 12.0px 'Apple SD Gothic Neo'}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!doctype html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="utf-8"/&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width,initial-scale=1"/&gt;</p>
+<p class="p1">&lt;title&gt;Chiang Mai RO Stations — Demo&lt;/title&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Basic meta for PWA --&gt;</p>
+<p class="p1">&lt;link rel="manifest" href="manifest.json" /&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>:root{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--glass-bg: rgba(255,255,255,0.18);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--glass-border: rgba(255,255,255,0.32);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--accent-1: #00b4d8;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--accent-2: #0077b6;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--accent-3: #90e0ef;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--text-1: #023e8a;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--muted: #6c757d;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#e6fbff,#f3fdff);color:var(--text-1);-webkit-font-smoothing:antialiased}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* subtle animated watery backdrop */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>body::after{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>content:"";position:fixed;inset:-20% -10% -20% -10%;z-index:-1;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background:</p>
+<p class="p1"><span class="Apple-converted-space">      </span>radial-gradient(circle at 10% 20%, rgba(0,180,216,0.10), transparent 12%),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>radial-gradient(circle at 80% 80%, rgba(0,120,180,0.08), transparent 10%),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>linear-gradient(120deg, rgba(170,240,255,0.6), rgba(230,250,255,0.4));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>filter: blur(30px);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transform: translateZ(0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* top sticky navbar (glass) */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.navbar{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>position:sticky; top:0; z-index:1200;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display:flex;align-items:center;gap:12px;padding:10px 14px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>backdrop-filter: blur(14px) saturate(140%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>-webkit-backdrop-filter: blur(14px) saturate(140%);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background:var(--glass-bg);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>border-bottom:1px solid var(--glass-border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.brand{display:flex;gap:10px;align-items:center}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.brand .logo{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>height:44px;width:44px;border-radius:12px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>background:linear-gradient(135deg,var(--accent-1),var(--accent-2));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(0,110,160,0.12)</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.brand h1{font-size:16px;margin:0;color:var(--text-1)}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* categories bar (always visible) */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.categoryBar{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>display:flex;flex:1;gap:10px;padding:6px 8px;overflow:auto;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>scrollbar-width:none;align-items:center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.categoryBar::-webkit-scrollbar{display:none}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cat{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>flex:0 0 auto;padding:8px 14px;border-radius:18px;background:rgba(255,255,255,0.35);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>color:var(--text-1);font-weight:600;border:1px solid rgba(255,255,255,0.2);cursor:pointer;white-space:nowrap;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>transition:all .22s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.cat.active{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,120,180,0.18)}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.actions{display:flex;gap:8px;align-items:center}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.btn { background:linear-gradient(135deg,var(--accent-1),var(--accent-2)); color:#fff;border:none;padding:8px 12px;border-radius:10px;font-weight:600;cursor:pointer }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.btn.alt { background:transparent;color:var(--accent-2);border:1px solid rgba(0,120,180,0.12) }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* layout */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#app{display:flex;height:calc(100vh - 64px);margin-top:0}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#sidebar{width:360px;min-width:300px;max-width:420px;overflow:auto;padding:16px;background:transparent}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#mapwrap{flex:1;position:relative}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>#map{position:absolute;inset:0;border-left:1px solid rgba(0,0,0,0.04)}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* glass card style for panels */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.card{background:var(--glass-bg);border-radius:14px;padding:12px;border:1px solid var(--glass-border);box-shadow:0 10px 30px rgba(0,100,150,0.06);margin-bottom:12px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>h2{margin:6px 0;font-size:16px;color:var(--accent-2)}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>label{display:block;font-size:13px;color:var(--muted);margin-top:8px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>input[type=text],input[type=number],select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);margin-top:6px;box-sizing:border-box}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.small{font-size:12px;color:var(--muted)}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stationItem{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.6);margin-bottom:8px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stationMeta{font-size:13px;color:var(--muted)}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.thumb{height:48px;width:48px;border-radius:8px;object-fit:cover}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* review UI */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stars{display:inline-flex;gap:6px;align-items:center}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stars span{font-size:20px;cursor:pointer;color:#d1d5db}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stars span.active{color:#ffd166}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* responsive */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>@media(max-width:860px){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#sidebar{width:100%;height:48vh;position:relative;z-index:1000}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#app{flex-direction:column-reverse;height:calc(100vh)}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#map{height:52vh}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>/* floating micro-animation for CTA */</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.pulse{animation:pulse 2.8s infinite}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- NAVBAR --&gt;</p>
+<p class="p1">&lt;div class="navbar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="brand"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="logo"&gt;RO&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h1&gt;Chiang Mai — RO Stations&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="small"&gt;Old City • 2 km radius • Local &amp; foreign friendly&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="categoryBar" id="categoryBar" aria-label="Categories"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat active" data-cat="all"&gt;All Stations&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="nearest"&gt;Nearest&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="price"&gt;Price (low)&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="top"&gt;Top Rated&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="maintenance"&gt;Needs Maintenance&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="recent"&gt;Recently Filtered&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="reviews"&gt;With Reviews&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="open247"&gt;24/7&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="favorites"&gt;Favorites&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="actions"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;select id="langSelect" aria-label="Select language" style="border-radius:10px;padding:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="en"&gt;English&lt;/option&gt;&lt;option value="th"&gt;<span class="s1">ไทย</span>&lt;/option&gt;&lt;option value="zh"&gt;<span class="s2">简体中文</span>&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="ko"&gt;<span class="s3">한국어</span>&lt;/option&gt;&lt;option value="ja"&gt;<span class="s2">日本語</span>&lt;/option&gt;&lt;option value="ru"&gt;Русский&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="fr"&gt;Français&lt;/option&gt;&lt;option value="es"&gt;Español&lt;/option&gt;&lt;option value="pt"&gt;Português&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="it"&gt;Italiano&lt;/option&gt;&lt;option value="de"&gt;Deutsch&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/select&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="exportBtn" class="btn alt small"&gt;Export&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="importBtn" class="btn small"&gt;Import&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- APP BODY --&gt;</p>
+<p class="p1">&lt;div id="app"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- SIDEBAR --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;aside id="sidebar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;justify-content:space-between;align-items:center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 id="panelTitle"&gt;Find nearest RO station&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="display:flex;gap:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="locateBtn" class="btn small pulse"&gt;Locate me&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="fitBtn" class="btn alt small"&gt;Fit Map&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="small"&gt;Tap the map to quickly fill coordinates when adding a station. Photos may be captured with your device camera.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="addCard" class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 id="addTitle"&gt;Add / Edit Station&lt;/h2&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input id="sName" placeholder="Station name (e.g. Moon Muang RO)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sLat" placeholder="Latitude"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sLng" placeholder="Longitude"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px;margin-top:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sPrice" type="number" step="0.01" placeholder="฿ / L"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="sOpen" title="Open hours"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="day"&gt;Day&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="24"&gt;24/7&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="night"&gt;Night&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Notes / remarks&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;textarea id="sNote" rows="2" placeholder="e.g. coin slot jammed last week, filter changed 2025-08-15"&gt;&lt;/textarea&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;label style="display:block;margin-top:8px"&gt;Photo (camera or gallery)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sPhoto" type="file" accept="image/*" capture="environment"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="photoPreview" style="margin-top:8px"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px;margin-top:10px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="addBtn" class="btn"&gt;Save station&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="clearBtn" class="btn alt"&gt;Clear&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="deleteBtn" class="btn alt" style="background:#ff6b6b;color:white;border:none"&gt;Delete&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="small" style="margin-top:8px"&gt;Stations saved locally. Use Export/Import to share or upload to a backend later.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="listCard" class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 id="listTitle"&gt;Stations (inside 2 km)&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="listContainer"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Data Controls&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="exportJson" class="btn alt small"&gt;Export JSON&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="importFile" type="file" accept="application/json" style="display:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="clearAllBtn" class="btn alt small" style="background:#ffe8e8;color:#7a0b0b"&gt;Clear All&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="small" style="margin-top:8px"&gt;Tip: Move to a cloud DB (Supabase / Firebase) to allow live shared updates and moderation.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/aside&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- MAP --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="mapwrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="map"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- Main app script --&gt;</p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">/* =======================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>CONFIG &amp; INITIAL STATE</p>
+<p class="p1"><span class="Apple-converted-space">   </span>======================= */</p>
+<p class="p1">const OLD_CITY_CENTER = { lat: 18.7875, lng: 98.993333 }; // Tha Phae Gate</p>
+<p class="p1">const RADIUS_METERS = 2000;</p>
+<p class="p1">const STORAGE_KEY = 'cm_ro_v2';</p>
+<p class="p1">let map, markers = [], circle, userPos = null, directionsService, directionsRenderer;</p>
+<p class="p1">let stations = []; // will load from storage or sample</p>
+<p class="p1">let currentLang = 'en';</p>
+<p class="p1">const translations = {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>en: { panelTitle:"Find nearest RO station", addTitle:"Add / Edit Station", listTitle:"Stations (inside 2 km)", saved:"Saved locally" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>th: { panelTitle:"<span class="s1">ค้นหาตู้น้ำ</span> RO <span class="s1">ใกล้คุณ</span>", addTitle:"<span class="s1">เพิ่ม</span> / <span class="s1">แก้ไขตู้</span>", listTitle:"<span class="s1">ตู้ภายใน</span> 2 <span class="s1">กม</span>", saved:"<span class="s1">บันทึกไว้ในอุปกรณ์</span>" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>zh: { panelTitle:"<span class="s2">查找最近的</span>RO<span class="s2">站</span>", addTitle:"<span class="s2">添加</span>/<span class="s2">编辑站点</span>", listTitle:"2<span class="s2">公里内的站点</span>", saved:"<span class="s2">已保存在本地</span>" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ko: { panelTitle:"<span class="s3">가까운</span> RO <span class="s3">정수소</span> <span class="s3">찾기</span>", addTitle:"<span class="s3">정수소</span> <span class="s3">추가</span>/<span class="s3">수정</span>", listTitle:"2km <span class="s3">이내</span> <span class="s3">정수소</span>", saved:"<span class="s3">로컬에</span> <span class="s3">저장됨</span>" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ja: { panelTitle:"<span class="s2">最寄りの</span>RO<span class="s2">ステーションを探す</span>", addTitle:"<span class="s2">ステーション追加</span>/<span class="s2">編集</span>", listTitle:"2km<span class="s2">以内のステーション</span>", saved:"<span class="s2">ローカルに保存されました</span>" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ru: { panelTitle:"Найти ближайшую RO станцию", addTitle:"Добавить / Редактировать", listTitle:"Станции в 2 км", saved:"Сохранено локально" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fr: { panelTitle:"Trouver la station RO la plus proche", addTitle:"Ajouter / Modifier", listTitle:"Stations dans 2 km", saved:"Enregistré localement" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>es: { panelTitle:"Encontrar la estación RO más cercana", addTitle:"Agregar / Editar", listTitle:"Estaciones dentro de 2 km", saved:"Guardado localmente" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>pt: { panelTitle:"Encontrar estação RO mais próxima", addTitle:"Adicionar / Editar", listTitle:"Estações em 2 km", saved:"Salvo localmente" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>it: { panelTitle:"Trova la stazione RO più vicina", addTitle:"Aggiungi / Modifica", listTitle:"Stazioni entro 2 km", saved:"Salvato localmente" },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>de: { panelTitle:"Nächste RO-Station finden", addTitle:"Station hinzufügen/bearbeiten", listTitle:"Stationen innerhalb 2 km", saved:"Lokal gespeichert" }</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">/* Sample-stations for first-run */</p>
+<p class="p1">const sampleStations = [</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{ id:'s1', name:'Moon Muang RO', lat:18.7882, lng:98.9965, price:0.60, open:'day', note:'sample', photos:[], rating:4.6, reviews:[], breakdowns:0, lastFilterChange:'2025-08-01', favorite:false },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{ id:'s2', name:'Ratchadamnoen Refill', lat:18.7879, lng:98.9938, price:0.50, open:'24', note:'sample', photos:[], rating:4.3, reviews:[{text:'Good price',stars:4,ts:Date.now()}], breakdowns:0, lastFilterChange:'2025-07-10', favorite:true },</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{ id:'s3', name:'Phrapokklao RO', lat:18.7940, lng:98.9885, price:0.45, open:'day', note:'sample', photos:[], rating:4.8, reviews:[], breakdowns:1, lastFilterChange:'2025-09-01', favorite:false }</p>
+<p class="p1">];</p>
+<p class="p2"><br></p>
+<p class="p1">/* -------------------------</p>
+<p class="p1"><span class="Apple-converted-space">   </span>STORAGE: load &amp; save</p>
+<p class="p1"><span class="Apple-converted-space">   </span>------------------------- */</p>
+<p class="p1">function loadStorage(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const raw = localStorage.getItem(STORAGE_KEY);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(raw){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>try{ stations = JSON.parse(raw); return; }catch(e){ console.warn('storage parse',e) }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>stations = sampleStations.slice();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>saveStorage();</p>
+<p class="p1">}</p>
+<p class="p1">function saveStorage(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(stations)); }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>MAP &amp; MARKER MANAGEMENT</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function initMap(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>map = new google.maps.Map(document.getElementById('map'), {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>center: OLD_CITY_CENTER,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>zoom: 15,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>mapTypeControl:false,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>fullscreenControl:false</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// 2km circle</p>
+<p class="p1"><span class="Apple-converted-space">  </span>circle = new google.maps.Circle({</p>
+<p class="p1"><span class="Apple-converted-space">    </span>map, center: OLD_CITY_CENTER, radius: RADIUS_METERS,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>fillColor:'#d7f3ff', fillOpacity:0.25, strokeColor:'#3aa0ff', strokeOpacity:0.6, strokeWeight:2</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>directionsService = new google.maps.DirectionsService();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>directionsRenderer = new google.maps.DirectionsRenderer({ map, suppressMarkers: false });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderAllMarkers();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>refreshList();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// map click fills lat/lng in the form</p>
+<p class="p1"><span class="Apple-converted-space">  </span>map.addListener('click', (e)=&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const lat = e.latLng.lat().toFixed(6), lng = e.latLng.lng().toFixed(6);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('sLat').value = lat;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('sLng').value = lng;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* create marker icons with price + small badge */</p>
+<p class="p1">function makeMarkerLabel(st){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>text: `฿${Number(st.price).toFixed(2)}`,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>className: 'marker-label'</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function clearMarkers(){ markers.forEach(m=&gt;m.marker.setMap(null)); markers=[]; }</p>
+<p class="p2"><br></p>
+<p class="p1">function renderAllMarkers(filtered = null){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>clearMarkers();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const list = filtered || stations;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>list.forEach(st=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const pos = { lat: parseFloat(st.lat), lng: parseFloat(st.lng) };</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const marker = new google.maps.Marker({</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position: pos, map, title: st.name,</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// icon: optional custom icon</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>const infoHtml = buildInfoWindowHtml(st);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const infow = new google.maps.InfoWindow({ content: infoHtml });</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>marker.addListener('click', ()=&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>infow.open(map, marker);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// attach review submit via delegations after DOM is ready</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(()=&gt;attachInfoWindowHandlers(st), 250);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>markers.push({ station: st, marker, info: infow });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Build InfoWindow HTML (string) */</p>
+<p class="p1">function buildInfoWindowHtml(st){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// show first photo if exists</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const p = st.photos &amp;&amp; st.photos[0] ? `&lt;img src="${st.photos[0]}" style="width:160px;height:100px;object-fit:cover;border-radius:8px;display:block;margin-bottom:8px"&gt;` : '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const reviewsCount = st.reviews ? st.reviews.length : 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const stars = st.rating ? Number(st.rating).toFixed(1) : '—';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return `</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="min-width:220px;font-family:-apple-system,Segoe UI,Roboto"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;strong style="font-size:15px;color:${getComputedStyle(document.documentElement).getPropertyValue('--accent-2')};"&gt;${escapeHtml(st.name)}&lt;/strong&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="font-size:13px;color:#666;margin-top:4px"&gt;${escapeHtml(st.note||'')}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top:8px"&gt;&lt;strong&gt;${Number(st.price).toFixed(2)} ฿ / L&lt;/strong&gt; • ${stars} <span class="s2">★</span> • ${reviewsCount} reviews&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>${p}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:6px;margin-top:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button data-id="${st.id}" class="dirBtn btn small"&gt;Directions&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button data-id="${st.id}" class="revOpen btn alt small"&gt;Review&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button data-id="${st.id}" class="editBtn btn alt small"&gt;Edit&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="revArea-${st.id}" style="margin-top:8px;display:none"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-top:6px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="stars" id="stars-${st.id}"&gt;${[1,2,3,4,5].map(n=&gt;`&lt;span data-star="${n}"&gt;<span class="s2">★</span>&lt;/span&gt;`).join('')}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;textarea id="revText-${st.id}" placeholder="Write a quick remark..." style="width:100%;height:64px;margin-top:6px"&gt;&lt;/textarea&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;input id="revPhoto-${st.id}" type="file" accept="image/*" capture="environment" style="margin-top:6px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="display:flex;gap:6px;margin-top:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button data-id="${st.id}" class="submitRev btn small"&gt;Submit&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button data-id="${st.id}" class="cancelRev btn alt small"&gt;Cancel&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>`;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* After InfoWindow opens attach handler logic (delegated) */</p>
+<p class="p1">function attachInfoWindowHandlers(st){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// directions</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.dirBtn[data-id="${st.id}"]`).forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; startDirectionsTo({lat:st.lat,lng:st.lng});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// open review</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.revOpen[data-id="${st.id}"]`).forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const el = document.getElementById(`revArea-${st.id}`);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>el.style.display = el.style.display === 'none' ? 'block' : 'none';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// edit</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.editBtn[data-id="${st.id}"]`).forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; fillFormForEdit(st);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// submit review</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.submitRev[data-id="${st.id}"]`).forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = async ()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const txt = document.getElementById(`revText-${st.id}`).value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const photoInput = document.getElementById(`revPhoto-${st.id}`);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let photoData = null;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(photoInput &amp;&amp; photoInput.files &amp;&amp; photoInput.files[0]){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>photoData = await fileToBase64(photoInput.files[0]);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const starsEls = document.querySelectorAll(`#stars-${st.id} span`);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let starVal = 5;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>starsEls.forEach(s=&gt;{ if(s.classList.contains('active')) starVal = parseInt(s.getAttribute('data-star')) });</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const review = { text: txt, photo: photoData, stars: starVal, ts: Date.now() };</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// push to station</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const idx = stations.findIndex(x=&gt;x.id===st.id);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(idx&gt;-1){ stations[idx].reviews = stations[idx].reviews || []; stations[idx].reviews.unshift(review);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// update rating (simple avg)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const allStars = stations[idx].reviews.map(r=&gt;r.stars);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>stations[idx].rating = (allStars.reduce((a,b)=&gt;a+b,0)/allStars.length);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>saveStorage(); renderAllMarkers(getCurrentFilteredStations()); refreshList();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>alert('Review saved locally');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// cancel</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.cancelRev[data-id="${st.id}"]`).forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const el = document.getElementById(`revArea-${st.id}`);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(el) el.style.display = 'none';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// star selection inside infowindow</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const starParent = document.getElementById(`stars-${st.id}`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(starParent){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>starParent.querySelectorAll('span').forEach(sp=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>sp.onclick = ()=&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const val = parseInt(sp.getAttribute('data-star'));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>starParent.querySelectorAll('span').forEach(s=&gt; s.classList.toggle('active', parseInt(s.getAttribute('data-star')) &lt;= val));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Start directions (uses Directions API if available, otherwise opens google maps link) */</p>
+<p class="p1">function startDirectionsTo(destLatLng){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(userPos){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Try Directions Service</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(directionsService){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>directionsService.route({</p>
+<p class="p1"><span class="Apple-converted-space">        </span>origin: userPos,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>destination: destLatLng,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>travelMode: google.maps.TravelMode.DRIVING</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}, (result, status) =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(status === 'OK'){ directionsRenderer.setDirections(result); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>// fallback to maps.google.com</p>
+<p class="p1"><span class="Apple-converted-space">          </span>window.open(`https://www.google.com/maps/dir/?api=1&amp;origin=${userPos.lat},${userPos.lng}&amp;destination=${destLatLng.lat},${destLatLng.lng}`, '_blank');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>window.open(`https://www.google.com/maps/dir/?api=1&amp;origin=${userPos.lat},${userPos.lng}&amp;destination=${destLatLng.lat},${destLatLng.lng}`, '_blank');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>alert('Please allow location (tap "Locate me") to route from your position.');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ===========================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>UI: List, Form, Events</p>
+<p class="p1"><span class="Apple-converted-space">   </span>=========================== */</p>
+<p class="p1">function refreshList(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const container = document.getElementById('listContainer');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>container.innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const filtered = getCurrentFilteredStations().filter(s =&gt; distanceMeters({lat:s.lat,lng:s.lng}, OLD_CITY_CENTER) &lt;= RADIUS_METERS);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(filtered.length === 0){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>container.innerHTML = `&lt;div class="small"&gt;No stations found inside 2 km. Add stations using the form.&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>filtered.sort((a,b)=&gt; a.price - b.price );</p>
+<p class="p1"><span class="Apple-converted-space">  </span>filtered.forEach(st=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const div = document.createElement('div');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>div.className = 'stationItem';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>div.innerHTML = `</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:10px;align-items:center"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>${st.photos &amp;&amp; st.photos[0] ? `&lt;img src="${st.photos[0]}" class="thumb"&gt;` : `&lt;div style="height:48px;width:48px;border-radius:8px;background:linear-gradient(135deg,var(--accent-3),var(--accent-1));display:flex;align-items:center;justify-content:center;color:#fff"&gt;W&lt;/div&gt;`}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="font-weight:700"&gt;${escapeHtml(st.name)}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="stationMeta"&gt;${(distanceMeters({lat:st.lat,lng:st.lng}, userPos || OLD_CITY_CENTER)/1000).toFixed(2)} km • ${st.price} ฿/L&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="text-align:right;display:flex;flex-direction:column;gap:6px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-weight:700"&gt;${st.rating ? Number(st.rating).toFixed(1) : '—'}<span class="s2">★</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn small" data-action="show" data-id="${st.id}"&gt;Show&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn alt small" data-action="route" data-id="${st.id}"&gt;Route&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>container.appendChild(div);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// attach list button events</p>
+<p class="p1"><span class="Apple-converted-space">  </span>container.querySelectorAll('button[data-action="show"]').forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const id = b.getAttribute('data-id'), obj = stations.find(s =&gt; s.id === id);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(obj){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>map.panTo({lat:parseFloat(obj.lat), lng:parseFloat(obj.lng)});</p>
+<p class="p1"><span class="Apple-converted-space">        </span>map.setZoom(17);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>container.querySelectorAll('button[data-action="route"]').forEach(b=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const id = b.getAttribute('data-id'), obj = stations.find(s =&gt; s.id === id);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(obj) startDirectionsTo({lat:obj.lat,lng:obj.lng});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Fill form for edit */</p>
+<p class="p1">function fillFormForEdit(st){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sName').value = st.name;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sLat').value = Number(st.lat).toFixed(6);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sLng').value = Number(st.lng).toFixed(6);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sPrice').value = Number(st.price).toFixed(2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sNote').value = st.note || '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('addBtn').dataset.editId = st.id;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// preview first photo</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const preview = document.getElementById('photoPreview');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>preview.innerHTML = st.photos &amp;&amp; st.photos[0] ? `&lt;img src="${st.photos[0]}" class="thumb"&gt;` : '';</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* add or update station from form */</p>
+<p class="p1">async function handleSaveStation(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const name = document.getElementById('sName').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const lat = parseFloat(document.getElementById('sLat').value);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const lng = parseFloat(document.getElementById('sLng').value);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const price = parseFloat(document.getElementById('sPrice').value);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const open = document.getElementById('sOpen').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const note = document.getElementById('sNote').value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!name || isNaN(lat) || isNaN(lng) || isNaN(price)){ return alert('Please fill name, latitude, longitude, and price'); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const editId = document.getElementById('addBtn').dataset.editId;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let photos = [];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const photoInput = document.getElementById('sPhoto');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(photoInput &amp;&amp; photoInput.files &amp;&amp; photoInput.files[0]){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const b64 = await fileToBase64(photoInput.files[0]);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>photos.push(b64);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// if editing and exists keep old</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(editId){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const old = stations.find(s =&gt; s.id === editId);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(old &amp;&amp; old.photos) photos = old.photos.slice();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const obj = {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>id: editId || ('s' + Date.now() + Math.floor(Math.random()*1000)),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>name, lat, lng, price, open, note, photos, rating: (editId ? (stations.find(s=&gt;s.id===editId).rating||0) : 0),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>reviews: (editId ? stations.find(s=&gt;s.id===editId).reviews || [] : []),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>breakdowns: (editId ? stations.find(s=&gt;s.id===editId).breakdowns || 0 : 0),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>lastFilterChange: (editId ? (stations.find(s=&gt;s.id===editId).lastFilterChange || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10)),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>favorite: (editId ? stations.find(s=&gt;s.id===editId).favorite || false : false)</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(editId){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>stations = stations.map(s =&gt; s.id === editId ? obj : s);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>delete document.getElementById('addBtn').dataset.editId;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>stations.push(obj);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>saveStorage();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderAllMarkers(getCurrentFilteredStations());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>refreshList();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>clearForm();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>alert(translations[currentLang].saved || 'Saved locally');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* clear form */</p>
+<p class="p1">function clearForm(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sName').value=''; document.getElementById('sLat').value=''; document.getElementById('sLng').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sPrice').value=''; document.getElementById('sNote').value=''; document.getElementById('sPhoto').value='';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('photoPreview').innerHTML = '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>delete document.getElementById('addBtn').dataset.editId;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* delete station */</p>
+<p class="p1">function handleDeleteStation(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const editId = document.getElementById('addBtn').dataset.editId;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!editId) return alert('No station selected to delete.');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(confirm('Delete station?')){ stations = stations.filter(s=&gt;s.id!==editId); saveStorage(); renderAllMarkers(); refreshList(); clearForm(); }</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* get current filtered stations based on active category */</p>
+<p class="p1">function getCurrentFilteredStations(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const active = document.querySelector('.cat.active').getAttribute('data-cat');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let res = stations.slice();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'nearest' &amp;&amp; userPos){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>res = res.sort((a,b) =&gt; distanceMeters(a, userPos) - distanceMeters(b, userPos));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'price') res = res.sort((a,b) =&gt; a.price - b.price);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'top') res = res.filter(s =&gt; (s.rating||0) &gt;= 4.5);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'maintenance') res = res.filter(s =&gt; (s.breakdowns||0) &gt; 0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'recent'){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>res = res.filter(s =&gt; new Date(s.lastFilterChange) &gt;= cutoff);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'reviews') res = res.filter(s =&gt; (s.reviews||[]).length &gt; 0);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'open247') res = res.filter(s =&gt; s.open === '24');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'favorites') res = res.filter(s =&gt; s.favorite);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return res;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* apply category selection */</p>
+<p class="p1">function setupCategoryClicks(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('.cat').forEach(c=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>c.onclick = ()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.querySelectorAll('.cat').forEach(x=&gt;x.classList.remove('active'));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>c.classList.add('active');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAllMarkers(getCurrentFilteredStations());</p>
+<p class="p1"><span class="Apple-converted-space">      </span>refreshList();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>UTIL: file -&gt; base64, escape, distance</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function fileToBase64(file){ return new Promise((resolve,reject)=&gt;{ const fr=new FileReader(); fr.onload = ()=&gt; resolve(fr.result); fr.onerror=reject; fr.readAsDataURL(file); }); }</p>
+<p class="p1">function escapeHtml(s){ return (s||'').replace(/[&amp;&lt;&gt;"']/g, c=&gt;({ '&amp;':'&amp;amp;','&lt;':'&amp;lt;','&gt;':'&amp;gt;','"':'&amp;quot;',"'":'&amp;#39;' })[c]); }</p>
+<p class="p1">function distanceMeters(a,b){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!a || !b) return 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const toRad = v=&gt;v*Math.PI/180;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const R = 6371000;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dLat = toRad(b.lat - a.lat);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dLon = toRad(b.lng - a.lng);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const lat1 = toRad(a.lat), lat2 = toRad(b.lat);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sin1 = Math.sin(dLat/2), sin2 = Math.sin(dLon/2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const aa = sin1*sin1 + Math.cos(lat1)*Math.cos(lat2)*sin2*sin2;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const c = 2*Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return R * c;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>LOCATION</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function locateUser(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!navigator.geolocation) return alert('Geolocation not supported.');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>navigator.geolocation.getCurrentPosition(pos=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// draw or move marker</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(window.userMarker) window.userMarker.setMap(null);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>window.userMarker = new google.maps.Marker({ position: userPos, map, title:'You', icon: { path: google.maps.SymbolPath.CIRCLE, scale:8, fillColor:'#00b4d8', fillOpacity:1, strokeColor:'#fff', strokeWeight:2 } });</p>
+<p class="p1"><span class="Apple-converted-space">    </span>map.panTo(userPos);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>map.setZoom(15);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// re-evaluate nearest if selected</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(document.querySelector('.cat.active').getAttribute('data-cat') === 'nearest') {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>renderAllMarkers(getCurrentFilteredStations());</p>
+<p class="p1"><span class="Apple-converted-space">      </span>refreshList();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}, err =&gt; alert('Could not get location: ' + err.message), { enableHighAccuracy:true });</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>Export / Import / Clear</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function exportJson(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const data = JSON.stringify(stations, null, 2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const blob = new Blob([data], { type: 'application/json' });</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const url = URL.createObjectURL(blob);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const a = document.createElement('a');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>a.href = url; a.download = 'cm_ro_stations.json'; a.click();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>URL.revokeObjectURL(url);</p>
+<p class="p1">}</p>
+<p class="p1">function importJsonFile(file){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const fr = new FileReader();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fr.onload = e=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>try{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const imported = JSON.parse(e.target.result);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(Array.isArray(imported)){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// merge or replace? For now append unique ids</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const ids = new Set(stations.map(s=&gt;s.id));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>imported.forEach(it=&gt;{ if(!it.id) it.id = 's' + Date.now() + Math.floor(Math.random()*1000); if(!ids.has(it.id)) stations.push(it); });</p>
+<p class="p1"><span class="Apple-converted-space">        </span>saveStorage(); renderAllMarkers(); refreshList(); alert('Imported ' + imported.length + ' items');</p>
+<p class="p1"><span class="Apple-converted-space">      </span>} else alert('Invalid JSON');</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}catch(err){ alert('Import failed: ' + err.message); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>fr.readAsText(file);</p>
+<p class="p1">}</p>
+<p class="p1">function clearAllData(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(confirm('Clear all local stations (this cannot be undone)?')){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>stations = []; saveStorage(); renderAllMarkers(); refreshList(); alert('Cleared.');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>Language switching</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function switchLang(l){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>currentLang = l;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const tr = translations[l] || translations['en'];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('panelTitle').innerText = tr.panelTitle;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('addTitle').innerText = tr.addTitle;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('listTitle').innerText = tr.listTitle;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>Helpers: get active filtered stations</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function getActiveCategory(){ return document.querySelector('.cat.active').getAttribute('data-cat'); }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>Boot / Event wiring</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">document.addEventListener('DOMContentLoaded', ()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>loadStorage();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>setupCategoryClicks();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// UI handlers</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('addBtn').addEventListener('click', handleSaveStation);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('clearBtn').addEventListener('click', clearForm);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('deleteBtn').addEventListener('click', handleDeleteStation);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('locateBtn').addEventListener('click', locateUser);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('fitBtn').addEventListener('click', ()=&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const bounds = new google.maps.LatLngBounds();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>stations.forEach(s =&gt; bounds.extend({lat:parseFloat(s.lat),lng:parseFloat(s.lng)}));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>bounds.extend(OLD_CITY_CENTER);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>map.fitBounds(bounds, 70);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// photo preview</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sPhoto').addEventListener('change', async (e)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const f = e.target.files[0];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!f) return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const b64 = await fileToBase64(f);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('photoPreview').innerHTML = `&lt;img src="${b64}" class="thumb"&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// export/import</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('exportJson').addEventListener('click', exportJson);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('importBtn').addEventListener('click', ()=&gt; document.getElementById('importFile').click());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('importFile').addEventListener('change', (e)=&gt; importJsonFile(e.target.files[0]));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('clearAllBtn').addEventListener('click', clearAllData);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// export quick</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('exportBtn').addEventListener('click', exportJson);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// language select</p>
+<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('langSelect').addEventListener('change', (e)=&gt; switchLang(e.target.value));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// attach click handler to list later</p>
+<p class="p1">});</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>Utility: render after google maps loaded</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function onGoogleMapsReady(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>initMap();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>renderAllMarkers();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>refreshList();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Helper to get current filtered stations for rendering */</p>
+<p class="p1">function renderAllMarkers(filteredList){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Overloaded: if called with no args, use stations</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(Array.isArray(filteredList)) return renderAllMarkers_impl(filteredList);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return renderAllMarkers_impl(stations);</p>
+<p class="p1">}</p>
+<p class="p1">function renderAllMarkers_impl(list){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>// remove previous</p>
+<p class="p1"><span class="Apple-converted-space">  </span>markers.forEach(m=&gt;m.marker.setMap(null)); markers = [];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>list.forEach(st=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const pos = {lat: parseFloat(st.lat), lng: parseFloat(st.lng)};</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const marker = new google.maps.Marker({ position: pos, map, title: st.name });</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const infow = new google.maps.InfoWindow({ content: buildInfoWindowHtml(st) });</p>
+<p class="p1"><span class="Apple-converted-space">    </span>marker.addListener('click', ()=&gt; { infow.open(map, marker); setTimeout(()=&gt;attachInfoWindowHandlers(st), 200); });</p>
+<p class="p1"><span class="Apple-converted-space">    </span>markers.push({station:st, marker, info:infow});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ============================</p>
+<p class="p1"><span class="Apple-converted-space">   </span>Load Google Maps async</p>
+<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
+<p class="p1">function mapsInit(){ onGoogleMapsReady(); }</p>
+<p class="p1">// Replace YOUR_GOOGLE_MAPS_API_KEY with your key</p>
+<p class="p1">const script = document.createElement('script');</p>
+<p class="p1">script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&amp;callback=mapsInit`;</p>
+<p class="p1">script.async = true;</p>
+<p class="p1">document.head.appendChild(script);</p>
+<p class="p2"><br></p>
+<p class="p1">/* expose for debugging */</p>
+<p class="p1">window._app = { stations, getCurrentFilteredStations, distanceMeters };</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
