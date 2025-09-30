@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sabai Water Map — Chiang Mai RO Stations</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="navbar">
+    <div class="brand"><div class="logo">RO</div><div>
+      <h1>Sabai Water Map</h1><div class="small">Old City • 2 km radius</div>
+    </div></div>
+
+    <div class="categoryBar" id="categoryBar" aria-label="Categories">
+      <div class="cat active" data-cat="all">All Stations</div>
+      <div class="cat" data-cat="nearest">Nearest</div>
+      <div class="cat" data-cat="price">Price (low)</div>
+      <div class="cat" data-cat="top">Top Rated</div>
+      <div class="cat" data-cat="maintenance">Needs Maintenance</div>
+      <div class="cat" data-cat="reviews">With Reviews</div>
+    </div>
+
+    <div class="actions">
+      <select id="langSelect" aria-label="Select language">
+        <option value="en">English</option><option value="th">ไทย</option><option value="zh">简体中文</option>
+        <option value="ko">한국어</option><option value="ja">日本語</option><option value="ru">Русский</option>
+        <option value="fr">Français</option><option value="es">Español</option><option value="pt">Português</option>
+        <option value="it">Italiano</option><option value="de">Deutsch</option>
+      </select>
+      <button id="exportBtn" class="btn alt">Export</button>
+      <button id="importBtn" class="btn">Import</button>
+    </div>
+  </div>
+
+  <div id="app">
+    <aside id="sidebar">
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h2 id="panelTitle">Find nearest RO station</h2>
+          <div style="display:flex;gap:8px">
+            <button id="locateBtn" class="btn pulse">Locate me</button>
+            <button id="fitBtn" class="btn alt">Fit Map</button>
+          </div>
+        </div>
+        <p class="small">Tap the map to fill coordinates. Photos backed up to Supabase Storage.</p>
+      </div>
+
+      <div id="addCard" class="card">
+        <h2 id="addTitle">Add / Edit Station</h2>
+        <input id="sName" placeholder="Station name (e.g. Moon Muang RO)">
+        <div style="display:flex;gap:8px">
+          <input id="sLat" placeholder="Latitude">
+          <input id="sLng" placeholder="Longitude">
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="sPrice" type="number" step="0.01" placeholder="฿ / L">
+          <select id="sOpen">
+            <option value="day">Day</option><option value="24">24/7</option><option value="night">Night</option>
+          </select>
+        </div>
+
+        <label>Notes / remarks</label>
+        <textarea id="sNote" rows="2"></textarea>
+
+        <label>Photo (camera or gallery)
+          <input id="sPhoto" type="file" accept="image/*" capture="environment">
+        </label>
+        <div id="photoPreview"></div>
+
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button id="addBtn" class="btn">Save station</button>
+          <button id="clearBtn" class="btn alt">Clear</button>
+          <button id="deleteBtn" class="btn alt" style="background:#ff6b6b;color:white;border:none">Delete</button>
+        </div>
+        <div class="small" style="margin-top:8px">Stations saved locally and synced to Supabase when connected.</div>
+      </div>
+
+      <div id="listCard" class="card">
+        <h2 id="listTitle">Stations (inside 2 km)</h2>
+        <div id="listContainer"></div>
+      </div>
+
+    </aside>
+
+    <div id="mapwrap">
+      <div id="map"></div>
+    </div>
+  </div>
+
+<script type="module" src="app.js"></script>
+<!-- Google Maps JS (replace YOUR_GOOGLE_MAPS_API_KEY) -->
+<script async src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+</body>
+</html>
