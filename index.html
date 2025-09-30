@@ -1,775 +1,1503 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2022.7">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-    span.s1 {font: 12.0px Thonburi}
-    span.s2 {font: 12.0px 'PingFang SC'}
-    span.s3 {font: 12.0px 'Apple SD Gothic Neo'}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sabaai Water Stations</title>
+    <style>
+        :root {
+            --primary: #4fc3f7;
+            --secondary: #29b6f6;
+            --accent: #0288d1;
+            --light: #e1f5fe;
+            --white: #ffffff;
+            --text: #263238;
+            --shadow: 0 4px 12px rgba(79, 195, 247, 0.2);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--light) 0%, #b3e5fc 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            padding: 1rem;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            fill: var(--white);
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+        }
+
+        .lang-toggle {
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .lang-toggle:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            padding: 0.5rem 0;
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            border: 2px solid var(--light);
+        }
+
+        .lang-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .lang-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text);
+            transition: var(--transition);
+            border-radius: 8px;
+            margin: 0.25rem 0.5rem;
+        }
+
+        .lang-option:hover {
+            background: var(--light);
+            color: var(--accent);
+        }
+
+        .lang-option.active {
+            background: rgba(79, 195, 247, 0.2);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 100px);
+            padding: 1rem;
+            gap: 1rem;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .map-container {
+            flex: 1;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(135deg, #b3e5fc 0%, #81d4fa 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+        }
+
+        .station-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .station-item {
+            background: linear-gradient(135deg, var(--white), #f5f9ff);
+            border-radius: 12px;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--light);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .station-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            transition: var(--transition);
+        }
+
+        .station-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(79, 195, 247, 0.2);
+            border-color: var(--primary);
+        }
+
+        .station-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+
+        .station-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-bottom: 0.25rem;
+        }
+
+        .station-price {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .station-address {
+            font-size: 0.9rem;
+            color: #78909c;
+            margin-bottom: 0.75rem;
+        }
+
+        .station-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--accent);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .current-location {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Price Legend Button */
+        .legend-toggle {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: var(--white);
+            color: var(--accent);
+            border: 2px solid var(--light);
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .legend-toggle:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+
+        .legend-toggle svg {
+            width: 16px;
+            height: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .legend-toggle.expanded svg {
+            transform: rotate(180deg);
+        }
+
+        /* Retractable Legend */
+        .legend {
+            position: absolute;
+            bottom: 70px;
+            left: 20px;
+            background: rgba(255,255,255,0.95);
+            padding: 1rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .legend.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .legend-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .modal-overlay.show .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: var(--white);
+            padding: 1.25rem 1.5rem;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .rating-control {
+            display: flex;
+            gap: 0.25rem;
+            margin: 0.5rem 0;
+        }
+
+        .rating-star {
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            color: var(--light);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .rating-star.active, .rating-star:hover {
+            color: #ffa726;
+            transform: scale(1.1);
+        }
+
+        .photo-upload {
+            border: 2px dashed var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 1rem 0;
+        }
+
+        .photo-upload:hover {
+            border-color: var(--primary);
+            background: rgba(79, 195, 247, 0.05);
+        }
+
+        .photo-upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-preview {
+            display: none;
+            margin: 1rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .condition-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .condition-tag {
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .condition-tag:hover {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .condition-tag.selected {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--white);
+        }
+
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--light);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            background: rgba(225, 245, 254, 0.5);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #66bb6a, #43a047);
+            color: var(--white);
+        }
+
+        .btn-cancel {
+            background: var(--light);
+            color: var(--text);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+                padding: 0.5rem;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                max-height: none;
+                padding: 1rem;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+            
+            .legend-toggle {
+                bottom: 15px;
+                left: 15px;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.85rem;
+            }
+            
+            .legend {
+                bottom: 60px;
+                left: 15px;
+                padding: 0.75rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!doctype html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1">&lt;meta charset="utf-8"/&gt;</p>
-<p class="p1">&lt;meta name="viewport" content="width=device-width,initial-scale=1"/&gt;</p>
-<p class="p1">&lt;title&gt;Chiang Mai RO Stations — Demo&lt;/title&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- Basic meta for PWA --&gt;</p>
-<p class="p1">&lt;link rel="manifest" href="manifest.json" /&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>:root{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--glass-bg: rgba(255,255,255,0.18);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--glass-border: rgba(255,255,255,0.32);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--accent-1: #00b4d8;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--accent-2: #0077b6;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--accent-3: #90e0ef;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--text-1: #023e8a;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>--muted: #6c757d;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>html,body{height:100%;margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#e6fbff,#f3fdff);color:var(--text-1);-webkit-font-smoothing:antialiased}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* subtle animated watery backdrop */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>body::after{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>content:"";position:fixed;inset:-20% -10% -20% -10%;z-index:-1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background:</p>
-<p class="p1"><span class="Apple-converted-space">      </span>radial-gradient(circle at 10% 20%, rgba(0,180,216,0.10), transparent 12%),</p>
-<p class="p1"><span class="Apple-converted-space">      </span>radial-gradient(circle at 80% 80%, rgba(0,120,180,0.08), transparent 10%),</p>
-<p class="p1"><span class="Apple-converted-space">      </span>linear-gradient(120deg, rgba(170,240,255,0.6), rgba(230,250,255,0.4));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>filter: blur(30px);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transform: translateZ(0);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* top sticky navbar (glass) */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.navbar{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>position:sticky; top:0; z-index:1200;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display:flex;align-items:center;gap:12px;padding:10px 14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>backdrop-filter: blur(14px) saturate(140%);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>-webkit-backdrop-filter: blur(14px) saturate(140%);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background:var(--glass-bg);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>border-bottom:1px solid var(--glass-border);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.brand{display:flex;gap:10px;align-items:center}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.brand .logo{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>height:44px;width:44px;border-radius:12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>background:linear-gradient(135deg,var(--accent-1),var(--accent-2));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(0,110,160,0.12)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.brand h1{font-size:16px;margin:0;color:var(--text-1)}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* categories bar (always visible) */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.categoryBar{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>display:flex;flex:1;gap:10px;padding:6px 8px;overflow:auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>scrollbar-width:none;align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.categoryBar::-webkit-scrollbar{display:none}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.cat{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>flex:0 0 auto;padding:8px 14px;border-radius:18px;background:rgba(255,255,255,0.35);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>color:var(--text-1);font-weight:600;border:1px solid rgba(255,255,255,0.2);cursor:pointer;white-space:nowrap;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>transition:all .22s;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.cat.active{background:linear-gradient(135deg,var(--accent-1),var(--accent-2));color:#fff;transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,120,180,0.18)}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.actions{display:flex;gap:8px;align-items:center}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.btn { background:linear-gradient(135deg,var(--accent-1),var(--accent-2)); color:#fff;border:none;padding:8px 12px;border-radius:10px;font-weight:600;cursor:pointer }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.btn.alt { background:transparent;color:var(--accent-2);border:1px solid rgba(0,120,180,0.12) }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* layout */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>#app{display:flex;height:calc(100vh - 64px);margin-top:0}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>#sidebar{width:360px;min-width:300px;max-width:420px;overflow:auto;padding:16px;background:transparent}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>#mapwrap{flex:1;position:relative}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>#map{position:absolute;inset:0;border-left:1px solid rgba(0,0,0,0.04)}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* glass card style for panels */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.card{background:var(--glass-bg);border-radius:14px;padding:12px;border:1px solid var(--glass-border);box-shadow:0 10px 30px rgba(0,100,150,0.06);margin-bottom:12px}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>h2{margin:6px 0;font-size:16px;color:var(--accent-2)}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>label{display:block;font-size:13px;color:var(--muted);margin-top:8px}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>input[type=text],input[type=number],select,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);margin-top:6px;box-sizing:border-box}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.small{font-size:12px;color:var(--muted)}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.stationItem{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:10px;background:rgba(255,255,255,0.6);margin-bottom:8px}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.stationMeta{font-size:13px;color:var(--muted)}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.thumb{height:48px;width:48px;border-radius:8px;object-fit:cover}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* review UI */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.stars{display:inline-flex;gap:6px;align-items:center}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.stars span{font-size:20px;cursor:pointer;color:#d1d5db}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.stars span.active{color:#ffd166}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* responsive */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>@media(max-width:860px){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#sidebar{width:100%;height:48vh;position:relative;z-index:1000}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#app{flex-direction:column-reverse;height:calc(100vh)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#map{height:52vh}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>/* floating micro-animation for CTA */</p>
-<p class="p1"><span class="Apple-converted-space">  </span>.pulse{animation:pulse 2.8s infinite}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>@keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}</p>
-<p class="p1">&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- NAVBAR --&gt;</p>
-<p class="p1">&lt;div class="navbar"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="brand"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="logo"&gt;RO&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;h1&gt;Chiang Mai — RO Stations&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="small"&gt;Old City • 2 km radius • Local &amp; foreign friendly&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="categoryBar" id="categoryBar" aria-label="Categories"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat active" data-cat="all"&gt;All Stations&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="nearest"&gt;Nearest&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="price"&gt;Price (low)&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="top"&gt;Top Rated&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="maintenance"&gt;Needs Maintenance&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="recent"&gt;Recently Filtered&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="reviews"&gt;With Reviews&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="open247"&gt;24/7&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="cat" data-cat="favorites"&gt;Favorites&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="actions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;select id="langSelect" aria-label="Select language" style="border-radius:10px;padding:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="en"&gt;English&lt;/option&gt;&lt;option value="th"&gt;<span class="s1">ไทย</span>&lt;/option&gt;&lt;option value="zh"&gt;<span class="s2">简体中文</span>&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="ko"&gt;<span class="s3">한국어</span>&lt;/option&gt;&lt;option value="ja"&gt;<span class="s2">日本語</span>&lt;/option&gt;&lt;option value="ru"&gt;Русский&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="fr"&gt;Français&lt;/option&gt;&lt;option value="es"&gt;Español&lt;/option&gt;&lt;option value="pt"&gt;Português&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;option value="it"&gt;Italiano&lt;/option&gt;&lt;option value="de"&gt;Deutsch&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/select&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="exportBtn" class="btn alt small"&gt;Export&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="importBtn" class="btn small"&gt;Import&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- APP BODY --&gt;</p>
-<p class="p1">&lt;div id="app"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- SIDEBAR --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;aside id="sidebar"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;justify-content:space-between;align-items:center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2 id="panelTitle"&gt;Find nearest RO station&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="display:flex;gap:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="locateBtn" class="btn small pulse"&gt;Locate me&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button id="fitBtn" class="btn alt small"&gt;Fit Map&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="small"&gt;Tap the map to quickly fill coordinates when adding a station. Photos may be captured with your device camera.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="addCard" class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 id="addTitle"&gt;Add / Edit Station&lt;/h2&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;input id="sName" placeholder="Station name (e.g. Moon Muang RO)"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sLat" placeholder="Latitude"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sLng" placeholder="Longitude"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px;margin-top:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sPrice" type="number" step="0.01" placeholder="฿ / L"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;select id="sOpen" title="Open hours"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="day"&gt;Day&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="24"&gt;24/7&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="night"&gt;Night&lt;/option&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;label&gt;Notes / remarks&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;textarea id="sNote" rows="2" placeholder="e.g. coin slot jammed last week, filter changed 2025-08-15"&gt;&lt;/textarea&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;label style="display:block;margin-top:8px"&gt;Photo (camera or gallery)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="sPhoto" type="file" accept="image/*" capture="environment"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="photoPreview" style="margin-top:8px"&gt;&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px;margin-top:10px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="addBtn" class="btn"&gt;Save station&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="clearBtn" class="btn alt"&gt;Clear&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="deleteBtn" class="btn alt" style="background:#ff6b6b;color:white;border:none"&gt;Delete&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="small" style="margin-top:8px"&gt;Stations saved locally. Use Export/Import to share or upload to a backend later.&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="listCard" class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 id="listTitle"&gt;Stations (inside 2 km)&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="listContainer"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="card"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Data Controls&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="exportJson" class="btn alt small"&gt;Export JSON&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input id="importFile" type="file" accept="application/json" style="display:none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="clearAllBtn" class="btn alt small" style="background:#ffe8e8;color:#7a0b0b"&gt;Clear All&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="small" style="margin-top:8px"&gt;Tip: Move to a cloud DB (Supabase / Firebase) to allow live shared updates and moderation.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/aside&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- MAP --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="mapwrap"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="map"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;!-- Main app script --&gt;</p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1">/* =======================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>CONFIG &amp; INITIAL STATE</p>
-<p class="p1"><span class="Apple-converted-space">   </span>======================= */</p>
-<p class="p1">const OLD_CITY_CENTER = { lat: 18.7875, lng: 98.993333 }; // Tha Phae Gate</p>
-<p class="p1">const RADIUS_METERS = 2000;</p>
-<p class="p1">const STORAGE_KEY = 'cm_ro_v2';</p>
-<p class="p1">let map, markers = [], circle, userPos = null, directionsService, directionsRenderer;</p>
-<p class="p1">let stations = []; // will load from storage or sample</p>
-<p class="p1">let currentLang = 'en';</p>
-<p class="p1">const translations = {</p>
-<p class="p1"><span class="Apple-converted-space">  </span>en: { panelTitle:"Find nearest RO station", addTitle:"Add / Edit Station", listTitle:"Stations (inside 2 km)", saved:"Saved locally" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>th: { panelTitle:"<span class="s1">ค้นหาตู้น้ำ</span> RO <span class="s1">ใกล้คุณ</span>", addTitle:"<span class="s1">เพิ่ม</span> / <span class="s1">แก้ไขตู้</span>", listTitle:"<span class="s1">ตู้ภายใน</span> 2 <span class="s1">กม</span>", saved:"<span class="s1">บันทึกไว้ในอุปกรณ์</span>" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>zh: { panelTitle:"<span class="s2">查找最近的</span>RO<span class="s2">站</span>", addTitle:"<span class="s2">添加</span>/<span class="s2">编辑站点</span>", listTitle:"2<span class="s2">公里内的站点</span>", saved:"<span class="s2">已保存在本地</span>" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ko: { panelTitle:"<span class="s3">가까운</span> RO <span class="s3">정수소</span> <span class="s3">찾기</span>", addTitle:"<span class="s3">정수소</span> <span class="s3">추가</span>/<span class="s3">수정</span>", listTitle:"2km <span class="s3">이내</span> <span class="s3">정수소</span>", saved:"<span class="s3">로컬에</span> <span class="s3">저장됨</span>" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ja: { panelTitle:"<span class="s2">最寄りの</span>RO<span class="s2">ステーションを探す</span>", addTitle:"<span class="s2">ステーション追加</span>/<span class="s2">編集</span>", listTitle:"2km<span class="s2">以内のステーション</span>", saved:"<span class="s2">ローカルに保存されました</span>" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>ru: { panelTitle:"Найти ближайшую RO станцию", addTitle:"Добавить / Редактировать", listTitle:"Станции в 2 км", saved:"Сохранено локально" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>fr: { panelTitle:"Trouver la station RO la plus proche", addTitle:"Ajouter / Modifier", listTitle:"Stations dans 2 km", saved:"Enregistré localement" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>es: { panelTitle:"Encontrar la estación RO más cercana", addTitle:"Agregar / Editar", listTitle:"Estaciones dentro de 2 km", saved:"Guardado localmente" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>pt: { panelTitle:"Encontrar estação RO mais próxima", addTitle:"Adicionar / Editar", listTitle:"Estações em 2 km", saved:"Salvo localmente" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>it: { panelTitle:"Trova la stazione RO più vicina", addTitle:"Aggiungi / Modifica", listTitle:"Stazioni entro 2 km", saved:"Salvato localmente" },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>de: { panelTitle:"Nächste RO-Station finden", addTitle:"Station hinzufügen/bearbeiten", listTitle:"Stationen innerhalb 2 km", saved:"Lokal gespeichert" }</p>
-<p class="p1">};</p>
-<p class="p2"><br></p>
-<p class="p1">/* Sample-stations for first-run */</p>
-<p class="p1">const sampleStations = [</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ id:'s1', name:'Moon Muang RO', lat:18.7882, lng:98.9965, price:0.60, open:'day', note:'sample', photos:[], rating:4.6, reviews:[], breakdowns:0, lastFilterChange:'2025-08-01', favorite:false },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ id:'s2', name:'Ratchadamnoen Refill', lat:18.7879, lng:98.9938, price:0.50, open:'24', note:'sample', photos:[], rating:4.3, reviews:[{text:'Good price',stars:4,ts:Date.now()}], breakdowns:0, lastFilterChange:'2025-07-10', favorite:true },</p>
-<p class="p1"><span class="Apple-converted-space">  </span>{ id:'s3', name:'Phrapokklao RO', lat:18.7940, lng:98.9885, price:0.45, open:'day', note:'sample', photos:[], rating:4.8, reviews:[], breakdowns:1, lastFilterChange:'2025-09-01', favorite:false }</p>
-<p class="p1">];</p>
-<p class="p2"><br></p>
-<p class="p1">/* -------------------------</p>
-<p class="p1"><span class="Apple-converted-space">   </span>STORAGE: load &amp; save</p>
-<p class="p1"><span class="Apple-converted-space">   </span>------------------------- */</p>
-<p class="p1">function loadStorage(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const raw = localStorage.getItem(STORAGE_KEY);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(raw){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>try{ stations = JSON.parse(raw); return; }catch(e){ console.warn('storage parse',e) }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>stations = sampleStations.slice();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>saveStorage();</p>
-<p class="p1">}</p>
-<p class="p1">function saveStorage(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(stations)); }</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>MAP &amp; MARKER MANAGEMENT</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function initMap(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>map = new google.maps.Map(document.getElementById('map'), {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>center: OLD_CITY_CENTER,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>zoom: 15,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>mapTypeControl:false,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>fullscreenControl:false</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// 2km circle</p>
-<p class="p1"><span class="Apple-converted-space">  </span>circle = new google.maps.Circle({</p>
-<p class="p1"><span class="Apple-converted-space">    </span>map, center: OLD_CITY_CENTER, radius: RADIUS_METERS,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>fillColor:'#d7f3ff', fillOpacity:0.25, strokeColor:'#3aa0ff', strokeOpacity:0.6, strokeWeight:2</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>directionsService = new google.maps.DirectionsService();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>directionsRenderer = new google.maps.DirectionsRenderer({ map, suppressMarkers: false });</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>renderAllMarkers();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>refreshList();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// map click fills lat/lng in the form</p>
-<p class="p1"><span class="Apple-converted-space">  </span>map.addListener('click', (e)=&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const lat = e.latLng.lat().toFixed(6), lng = e.latLng.lng().toFixed(6);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('sLat').value = lat;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('sLng').value = lng;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* create marker icons with price + small badge */</p>
-<p class="p1">function makeMarkerLabel(st){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>text: `฿${Number(st.price).toFixed(2)}`,</p>
-<p class="p1"><span class="Apple-converted-space">    </span>className: 'marker-label'</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">function clearMarkers(){ markers.forEach(m=&gt;m.marker.setMap(null)); markers=[]; }</p>
-<p class="p2"><br></p>
-<p class="p1">function renderAllMarkers(filtered = null){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>clearMarkers();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const list = filtered || stations;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>list.forEach(st=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const pos = { lat: parseFloat(st.lat), lng: parseFloat(st.lng) };</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const marker = new google.maps.Marker({</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position: pos, map, title: st.name,</p>
-<p class="p1"><span class="Apple-converted-space">      </span>// icon: optional custom icon</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const infoHtml = buildInfoWindowHtml(st);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const infow = new google.maps.InfoWindow({ content: infoHtml });</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>marker.addListener('click', ()=&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>infow.open(map, marker);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>// attach review submit via delegations after DOM is ready</p>
-<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(()=&gt;attachInfoWindowHandlers(st), 250);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>markers.push({ station: st, marker, info: infow });</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* Build InfoWindow HTML (string) */</p>
-<p class="p1">function buildInfoWindowHtml(st){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// show first photo if exists</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const p = st.photos &amp;&amp; st.photos[0] ? `&lt;img src="${st.photos[0]}" style="width:160px;height:100px;object-fit:cover;border-radius:8px;display:block;margin-bottom:8px"&gt;` : '';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const reviewsCount = st.reviews ? st.reviews.length : 0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const stars = st.rating ? Number(st.rating).toFixed(1) : '—';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return `</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div style="min-width:220px;font-family:-apple-system,Segoe UI,Roboto"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;strong style="font-size:15px;color:${getComputedStyle(document.documentElement).getPropertyValue('--accent-2')};"&gt;${escapeHtml(st.name)}&lt;/strong&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="font-size:13px;color:#666;margin-top:4px"&gt;${escapeHtml(st.note||'')}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="margin-top:8px"&gt;&lt;strong&gt;${Number(st.price).toFixed(2)} ฿ / L&lt;/strong&gt; • ${stars} <span class="s2">★</span> • ${reviewsCount} reviews&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>${p}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:6px;margin-top:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button data-id="${st.id}" class="dirBtn btn small"&gt;Directions&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button data-id="${st.id}" class="revOpen btn alt small"&gt;Review&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button data-id="${st.id}" class="editBtn btn alt small"&gt;Edit&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div id="revArea-${st.id}" style="margin-top:8px;display:none"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="margin-top:6px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="stars" id="stars-${st.id}"&gt;${[1,2,3,4,5].map(n=&gt;`&lt;span data-star="${n}"&gt;<span class="s2">★</span>&lt;/span&gt;`).join('')}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;textarea id="revText-${st.id}" placeholder="Write a quick remark..." style="width:100%;height:64px;margin-top:6px"&gt;&lt;/textarea&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;input id="revPhoto-${st.id}" type="file" accept="image/*" capture="environment" style="margin-top:6px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="display:flex;gap:6px;margin-top:8px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button data-id="${st.id}" class="submitRev btn small"&gt;Submit&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button data-id="${st.id}" class="cancelRev btn alt small"&gt;Cancel&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>`;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* After InfoWindow opens attach handler logic (delegated) */</p>
-<p class="p1">function attachInfoWindowHandlers(st){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// directions</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.dirBtn[data-id="${st.id}"]`).forEach(b=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; startDirectionsTo({lat:st.lat,lng:st.lng});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// open review</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.revOpen[data-id="${st.id}"]`).forEach(b=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const el = document.getElementById(`revArea-${st.id}`);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>el.style.display = el.style.display === 'none' ? 'block' : 'none';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// edit</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.editBtn[data-id="${st.id}"]`).forEach(b=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; fillFormForEdit(st);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// submit review</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.submitRev[data-id="${st.id}"]`).forEach(b=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = async ()=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const txt = document.getElementById(`revText-${st.id}`).value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const photoInput = document.getElementById(`revPhoto-${st.id}`);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let photoData = null;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(photoInput &amp;&amp; photoInput.files &amp;&amp; photoInput.files[0]){</p>
-<p class="p1"><span class="Apple-converted-space">        </span>photoData = await fileToBase64(photoInput.files[0]);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const starsEls = document.querySelectorAll(`#stars-${st.id} span`);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let starVal = 5;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>starsEls.forEach(s=&gt;{ if(s.classList.contains('active')) starVal = parseInt(s.getAttribute('data-star')) });</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const review = { text: txt, photo: photoData, stars: starVal, ts: Date.now() };</p>
-<p class="p1"><span class="Apple-converted-space">      </span>// push to station</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const idx = stations.findIndex(x=&gt;x.id===st.id);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(idx&gt;-1){ stations[idx].reviews = stations[idx].reviews || []; stations[idx].reviews.unshift(review);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>// update rating (simple avg)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const allStars = stations[idx].reviews.map(r=&gt;r.stars);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>stations[idx].rating = (allStars.reduce((a,b)=&gt;a+b,0)/allStars.length);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>saveStorage(); renderAllMarkers(getCurrentFilteredStations()); refreshList();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>alert('Review saved locally');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// cancel</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll(`.cancelRev[data-id="${st.id}"]`).forEach(b=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const el = document.getElementById(`revArea-${st.id}`);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(el) el.style.display = 'none';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// star selection inside infowindow</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const starParent = document.getElementById(`stars-${st.id}`);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(starParent){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>starParent.querySelectorAll('span').forEach(sp=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>sp.onclick = ()=&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const val = parseInt(sp.getAttribute('data-star'));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>starParent.querySelectorAll('span').forEach(s=&gt; s.classList.toggle('active', parseInt(s.getAttribute('data-star')) &lt;= val));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>};</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* Start directions (uses Directions API if available, otherwise opens google maps link) */</p>
-<p class="p1">function startDirectionsTo(destLatLng){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(userPos){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Try Directions Service</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(directionsService){</p>
-<p class="p1"><span class="Apple-converted-space">      </span>directionsService.route({</p>
-<p class="p1"><span class="Apple-converted-space">        </span>origin: userPos,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>destination: destLatLng,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>travelMode: google.maps.TravelMode.DRIVING</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}, (result, status) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if(status === 'OK'){ directionsRenderer.setDirections(result); }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>else {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>// fallback to maps.google.com</p>
-<p class="p1"><span class="Apple-converted-space">          </span>window.open(`https://www.google.com/maps/dir/?api=1&amp;origin=${userPos.lat},${userPos.lng}&amp;destination=${destLatLng.lat},${destLatLng.lng}`, '_blank');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>window.open(`https://www.google.com/maps/dir/?api=1&amp;origin=${userPos.lat},${userPos.lng}&amp;destination=${destLatLng.lat},${destLatLng.lng}`, '_blank');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>alert('Please allow location (tap "Locate me") to route from your position.');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* ===========================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>UI: List, Form, Events</p>
-<p class="p1"><span class="Apple-converted-space">   </span>=========================== */</p>
-<p class="p1">function refreshList(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const container = document.getElementById('listContainer');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>container.innerHTML = '';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const filtered = getCurrentFilteredStations().filter(s =&gt; distanceMeters({lat:s.lat,lng:s.lng}, OLD_CITY_CENTER) &lt;= RADIUS_METERS);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(filtered.length === 0){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>container.innerHTML = `&lt;div class="small"&gt;No stations found inside 2 km. Add stations using the form.&lt;/div&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>return;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>filtered.sort((a,b)=&gt; a.price - b.price );</p>
-<p class="p1"><span class="Apple-converted-space">  </span>filtered.forEach(st=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const div = document.createElement('div');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>div.className = 'stationItem';</p>
-<p class="p1"><span class="Apple-converted-space">    </span>div.innerHTML = `</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="display:flex;gap:10px;align-items:center"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>${st.photos &amp;&amp; st.photos[0] ? `&lt;img src="${st.photos[0]}" class="thumb"&gt;` : `&lt;div style="height:48px;width:48px;border-radius:8px;background:linear-gradient(135deg,var(--accent-3),var(--accent-1));display:flex;align-items:center;justify-content:center;color:#fff"&gt;W&lt;/div&gt;`}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="font-weight:700"&gt;${escapeHtml(st.name)}&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="stationMeta"&gt;${(distanceMeters({lat:st.lat,lng:st.lng}, userPos || OLD_CITY_CENTER)/1000).toFixed(2)} km • ${st.price} ฿/L&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="text-align:right;display:flex;flex-direction:column;gap:6px"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="font-weight:700"&gt;${st.rating ? Number(st.rating).toFixed(1) : '—'}<span class="s2">★</span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn small" data-action="show" data-id="${st.id}"&gt;Show&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;button class="btn alt small" data-action="route" data-id="${st.id}"&gt;Route&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>`;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>container.appendChild(div);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// attach list button events</p>
-<p class="p1"><span class="Apple-converted-space">  </span>container.querySelectorAll('button[data-action="show"]').forEach(b=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const id = b.getAttribute('data-id'), obj = stations.find(s =&gt; s.id === id);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(obj){</p>
-<p class="p1"><span class="Apple-converted-space">        </span>map.panTo({lat:parseFloat(obj.lat), lng:parseFloat(obj.lng)});</p>
-<p class="p1"><span class="Apple-converted-space">        </span>map.setZoom(17);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>container.querySelectorAll('button[data-action="route"]').forEach(b=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>b.onclick = ()=&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const id = b.getAttribute('data-id'), obj = stations.find(s =&gt; s.id === id);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(obj) startDirectionsTo({lat:obj.lat,lng:obj.lng});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* Fill form for edit */</p>
-<p class="p1">function fillFormForEdit(st){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sName').value = st.name;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sLat').value = Number(st.lat).toFixed(6);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sLng').value = Number(st.lng).toFixed(6);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sPrice').value = Number(st.price).toFixed(2);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sNote').value = st.note || '';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('addBtn').dataset.editId = st.id;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// preview first photo</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const preview = document.getElementById('photoPreview');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>preview.innerHTML = st.photos &amp;&amp; st.photos[0] ? `&lt;img src="${st.photos[0]}" class="thumb"&gt;` : '';</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* add or update station from form */</p>
-<p class="p1">async function handleSaveStation(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const name = document.getElementById('sName').value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lat = parseFloat(document.getElementById('sLat').value);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lng = parseFloat(document.getElementById('sLng').value);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const price = parseFloat(document.getElementById('sPrice').value);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const open = document.getElementById('sOpen').value;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const note = document.getElementById('sNote').value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(!name || isNaN(lat) || isNaN(lng) || isNaN(price)){ return alert('Please fill name, latitude, longitude, and price'); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const editId = document.getElementById('addBtn').dataset.editId;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let photos = [];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const photoInput = document.getElementById('sPhoto');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(photoInput &amp;&amp; photoInput.files &amp;&amp; photoInput.files[0]){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const b64 = await fileToBase64(photoInput.files[0]);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>photos.push(b64);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// if editing and exists keep old</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(editId){</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const old = stations.find(s =&gt; s.id === editId);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(old &amp;&amp; old.photos) photos = old.photos.slice();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const obj = {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>id: editId || ('s' + Date.now() + Math.floor(Math.random()*1000)),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>name, lat, lng, price, open, note, photos, rating: (editId ? (stations.find(s=&gt;s.id===editId).rating||0) : 0),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>reviews: (editId ? stations.find(s=&gt;s.id===editId).reviews || [] : []),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>breakdowns: (editId ? stations.find(s=&gt;s.id===editId).breakdowns || 0 : 0),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>lastFilterChange: (editId ? (stations.find(s=&gt;s.id===editId).lastFilterChange || new Date().toISOString().slice(0,10)) : new Date().toISOString().slice(0,10)),</p>
-<p class="p1"><span class="Apple-converted-space">    </span>favorite: (editId ? stations.find(s=&gt;s.id===editId).favorite || false : false)</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(editId){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>stations = stations.map(s =&gt; s.id === editId ? obj : s);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>delete document.getElementById('addBtn').dataset.editId;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>stations.push(obj);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>saveStorage();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>renderAllMarkers(getCurrentFilteredStations());</p>
-<p class="p1"><span class="Apple-converted-space">  </span>refreshList();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>clearForm();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>alert(translations[currentLang].saved || 'Saved locally');</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* clear form */</p>
-<p class="p1">function clearForm(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sName').value=''; document.getElementById('sLat').value=''; document.getElementById('sLng').value='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sPrice').value=''; document.getElementById('sNote').value=''; document.getElementById('sPhoto').value='';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('photoPreview').innerHTML = '';</p>
-<p class="p1"><span class="Apple-converted-space">  </span>delete document.getElementById('addBtn').dataset.editId;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* delete station */</p>
-<p class="p1">function handleDeleteStation(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const editId = document.getElementById('addBtn').dataset.editId;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(!editId) return alert('No station selected to delete.');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(confirm('Delete station?')){ stations = stations.filter(s=&gt;s.id!==editId); saveStorage(); renderAllMarkers(); refreshList(); clearForm(); }</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* get current filtered stations based on active category */</p>
-<p class="p1">function getCurrentFilteredStations(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const active = document.querySelector('.cat.active').getAttribute('data-cat');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>let res = stations.slice();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'nearest' &amp;&amp; userPos){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>res = res.sort((a,b) =&gt; distanceMeters(a, userPos) - distanceMeters(b, userPos));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'price') res = res.sort((a,b) =&gt; a.price - b.price);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'top') res = res.filter(s =&gt; (s.rating||0) &gt;= 4.5);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'maintenance') res = res.filter(s =&gt; (s.breakdowns||0) &gt; 0);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'recent'){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>res = res.filter(s =&gt; new Date(s.lastFilterChange) &gt;= cutoff);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'reviews') res = res.filter(s =&gt; (s.reviews||[]).length &gt; 0);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'open247') res = res.filter(s =&gt; s.open === '24');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(active === 'favorites') res = res.filter(s =&gt; s.favorite);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return res;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* apply category selection */</p>
-<p class="p1">function setupCategoryClicks(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.querySelectorAll('.cat').forEach(c=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>c.onclick = ()=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.querySelectorAll('.cat').forEach(x=&gt;x.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>c.classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>renderAllMarkers(getCurrentFilteredStations());</p>
-<p class="p1"><span class="Apple-converted-space">      </span>refreshList();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>UTIL: file -&gt; base64, escape, distance</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function fileToBase64(file){ return new Promise((resolve,reject)=&gt;{ const fr=new FileReader(); fr.onload = ()=&gt; resolve(fr.result); fr.onerror=reject; fr.readAsDataURL(file); }); }</p>
-<p class="p1">function escapeHtml(s){ return (s||'').replace(/[&amp;&lt;&gt;"']/g, c=&gt;({ '&amp;':'&amp;amp;','&lt;':'&amp;lt;','&gt;':'&amp;gt;','"':'&amp;quot;',"'":'&amp;#39;' })[c]); }</p>
-<p class="p1">function distanceMeters(a,b){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(!a || !b) return 0;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const toRad = v=&gt;v*Math.PI/180;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const R = 6371000;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const dLat = toRad(b.lat - a.lat);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const dLon = toRad(b.lng - a.lng);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const lat1 = toRad(a.lat), lat2 = toRad(b.lat);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const sin1 = Math.sin(dLat/2), sin2 = Math.sin(dLon/2);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const aa = sin1*sin1 + Math.cos(lat1)*Math.cos(lat2)*sin2*sin2;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const c = 2*Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return R * c;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>LOCATION</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function locateUser(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(!navigator.geolocation) return alert('Geolocation not supported.');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>navigator.geolocation.getCurrentPosition(pos=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// draw or move marker</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(window.userMarker) window.userMarker.setMap(null);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>window.userMarker = new google.maps.Marker({ position: userPos, map, title:'You', icon: { path: google.maps.SymbolPath.CIRCLE, scale:8, fillColor:'#00b4d8', fillOpacity:1, strokeColor:'#fff', strokeWeight:2 } });</p>
-<p class="p1"><span class="Apple-converted-space">    </span>map.panTo(userPos);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>map.setZoom(15);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>// re-evaluate nearest if selected</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(document.querySelector('.cat.active').getAttribute('data-cat') === 'nearest') {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>renderAllMarkers(getCurrentFilteredStations());</p>
-<p class="p1"><span class="Apple-converted-space">      </span>refreshList();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}, err =&gt; alert('Could not get location: ' + err.message), { enableHighAccuracy:true });</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>Export / Import / Clear</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function exportJson(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const data = JSON.stringify(stations, null, 2);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const blob = new Blob([data], { type: 'application/json' });</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const url = URL.createObjectURL(blob);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const a = document.createElement('a');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>a.href = url; a.download = 'cm_ro_stations.json'; a.click();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>URL.revokeObjectURL(url);</p>
-<p class="p1">}</p>
-<p class="p1">function importJsonFile(file){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const fr = new FileReader();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>fr.onload = e=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>try{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>const imported = JSON.parse(e.target.result);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>if(Array.isArray(imported)){</p>
-<p class="p1"><span class="Apple-converted-space">        </span>// merge or replace? For now append unique ids</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const ids = new Set(stations.map(s=&gt;s.id));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>imported.forEach(it=&gt;{ if(!it.id) it.id = 's' + Date.now() + Math.floor(Math.random()*1000); if(!ids.has(it.id)) stations.push(it); });</p>
-<p class="p1"><span class="Apple-converted-space">        </span>saveStorage(); renderAllMarkers(); refreshList(); alert('Imported ' + imported.length + ' items');</p>
-<p class="p1"><span class="Apple-converted-space">      </span>} else alert('Invalid JSON');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}catch(err){ alert('Import failed: ' + err.message); }</p>
-<p class="p1"><span class="Apple-converted-space">  </span>};</p>
-<p class="p1"><span class="Apple-converted-space">  </span>fr.readAsText(file);</p>
-<p class="p1">}</p>
-<p class="p1">function clearAllData(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(confirm('Clear all local stations (this cannot be undone)?')){</p>
-<p class="p1"><span class="Apple-converted-space">    </span>stations = []; saveStorage(); renderAllMarkers(); refreshList(); alert('Cleared.');</p>
-<p class="p1"><span class="Apple-converted-space">  </span>}</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>Language switching</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function switchLang(l){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>currentLang = l;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>const tr = translations[l] || translations['en'];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('panelTitle').innerText = tr.panelTitle;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('addTitle').innerText = tr.addTitle;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('listTitle').innerText = tr.listTitle;</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>Helpers: get active filtered stations</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function getActiveCategory(){ return document.querySelector('.cat.active').getAttribute('data-cat'); }</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>Boot / Event wiring</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">document.addEventListener('DOMContentLoaded', ()=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">  </span>loadStorage();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>setupCategoryClicks();</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// UI handlers</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('addBtn').addEventListener('click', handleSaveStation);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('clearBtn').addEventListener('click', clearForm);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('deleteBtn').addEventListener('click', handleDeleteStation);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('locateBtn').addEventListener('click', locateUser);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('fitBtn').addEventListener('click', ()=&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const bounds = new google.maps.LatLngBounds();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>stations.forEach(s =&gt; bounds.extend({lat:parseFloat(s.lat),lng:parseFloat(s.lng)}));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>bounds.extend(OLD_CITY_CENTER);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>map.fitBounds(bounds, 70);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// photo preview</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('sPhoto').addEventListener('change', async (e)=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const f = e.target.files[0];</p>
-<p class="p1"><span class="Apple-converted-space">    </span>if(!f) return;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const b64 = await fileToBase64(f);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>document.getElementById('photoPreview').innerHTML = `&lt;img src="${b64}" class="thumb"&gt;`;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// export/import</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('exportJson').addEventListener('click', exportJson);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('importBtn').addEventListener('click', ()=&gt; document.getElementById('importFile').click());</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('importFile').addEventListener('change', (e)=&gt; importJsonFile(e.target.files[0]));</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('clearAllBtn').addEventListener('click', clearAllData);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// export quick</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('exportBtn').addEventListener('click', exportJson);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// language select</p>
-<p class="p1"><span class="Apple-converted-space">  </span>document.getElementById('langSelect').addEventListener('change', (e)=&gt; switchLang(e.target.value));</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>// attach click handler to list later</p>
-<p class="p1">});</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>Utility: render after google maps loaded</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function onGoogleMapsReady(){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>initMap();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>renderAllMarkers();</p>
-<p class="p1"><span class="Apple-converted-space">  </span>refreshList();</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* Helper to get current filtered stations for rendering */</p>
-<p class="p1">function renderAllMarkers(filteredList){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// Overloaded: if called with no args, use stations</p>
-<p class="p1"><span class="Apple-converted-space">  </span>if(Array.isArray(filteredList)) return renderAllMarkers_impl(filteredList);</p>
-<p class="p1"><span class="Apple-converted-space">  </span>return renderAllMarkers_impl(stations);</p>
-<p class="p1">}</p>
-<p class="p1">function renderAllMarkers_impl(list){</p>
-<p class="p1"><span class="Apple-converted-space">  </span>// remove previous</p>
-<p class="p1"><span class="Apple-converted-space">  </span>markers.forEach(m=&gt;m.marker.setMap(null)); markers = [];</p>
-<p class="p1"><span class="Apple-converted-space">  </span>list.forEach(st=&gt;{</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const pos = {lat: parseFloat(st.lat), lng: parseFloat(st.lng)};</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const marker = new google.maps.Marker({ position: pos, map, title: st.name });</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const infow = new google.maps.InfoWindow({ content: buildInfoWindowHtml(st) });</p>
-<p class="p1"><span class="Apple-converted-space">    </span>marker.addListener('click', ()=&gt; { infow.open(map, marker); setTimeout(()=&gt;attachInfoWindowHandlers(st), 200); });</p>
-<p class="p1"><span class="Apple-converted-space">    </span>markers.push({station:st, marker, info:infow});</p>
-<p class="p1"><span class="Apple-converted-space">  </span>});</p>
-<p class="p1">}</p>
-<p class="p2"><br></p>
-<p class="p1">/* ============================</p>
-<p class="p1"><span class="Apple-converted-space">   </span>Load Google Maps async</p>
-<p class="p1"><span class="Apple-converted-space">   </span>============================ */</p>
-<p class="p1">function mapsInit(){ onGoogleMapsReady(); }</p>
-<p class="p1">// Replace YOUR_GOOGLE_MAPS_API_KEY with your key</p>
-<p class="p1">const script = document.createElement('script');</p>
-<p class="p1">script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&amp;callback=mapsInit`;</p>
-<p class="p1">script.async = true;</p>
-<p class="p1">document.head.appendChild(script);</p>
-<p class="p2"><br></p>
-<p class="p1">/* expose for debugging */</p>
-<p class="p1">window._app = { stations, getCurrentFilteredStations, distanceMeters };</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+    <header>
+        <div class="logo-container">
+            <!-- Modern, minimalist water drop logo -->
+            <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+            </svg>
+            <span class="logo-text">Sabaai Water</span>
+        </div>
+        <p class="header-subtitle" id="pageSubtitle">Find reverse osmosis water stations within 2km radius</p>
+        
+        <div class="language-dropdown">
+            <button class="lang-toggle" id="langToggle">
+                <span id="currentLanguage">English</span>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </button>
+            <div class="lang-dropdown" id="langDropdown">
+                <div class="lang-option active" data-lang="en">
+                    <img src="https://flagcdn.com/w20/us.png" alt="English" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>English</span>
+                </div>
+                <div class="lang-option" data-lang="th">
+                    <img src="https://flagcdn.com/w20/th.png" alt="Thai" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>ไทย</span>
+                </div>
+                <div class="lang-option" data-lang="zh">
+                    <img src="https://flagcdn.com/w20/cn.png" alt="Chinese" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>中文</span>
+                </div>
+                <div class="lang-option" data-lang="ko">
+                    <img src="https://flagcdn.com/w20/kr.png" alt="Korean" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>한국어</span>
+                </div>
+                <div class="lang-option" data-lang="ja">
+                    <img src="https://flagcdn.com/w20/jp.png" alt="Japanese" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>日本語</span>
+                </div>
+                <div class="lang-option" data-lang="ru">
+                    <img src="https://flagcdn.com/w20/ru.png" alt="Russian" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>Русский</span>
+                </div>
+                <div class="lang-option" data-lang="fr">
+                    <img src="https://flagcdn.com/w20/fr.png" alt="French" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>Français</span>
+                </div>
+                <div class="lang-option" data-lang="es">
+                    <img src="https://flagcdn.com/w20/es.png" alt="Spanish" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>Español</span>
+                </div>
+                <div class="lang-option" data-lang="pt">
+                    <img src="https://flagcdn.com/w20/pt.png" alt="Portuguese" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>Português</span>
+                </div>
+                <div class="lang-option" data-lang="it">
+                    <img src="https://flagcdn.com/w20/it.png" alt="Italian" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>Italiano</span>
+                </div>
+                <div class="lang-option" data-lang="de">
+                    <img src="https://flagcdn.com/w20/de.png" alt="German" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>Deutsch</span>
+                </div>
+                <div class="lang-option" data-lang="ar">
+                    <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" style="width:24px; height:16px; border-radius:3px; margin-right:0.5rem;">
+                    <span>العربية</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="sidebar">
+            <button class="current-location" id="locateMe">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span id="locateMeText">Find My Location</span>
+            </button>
+            
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search for stations...">
+            </div>
+            
+            <div class="station-list" id="stationList">
+                <!-- Stations will be populated here -->
+                <div style="text-align:center; padding:2rem; color:#78909c;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1rem; display:block;">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <p id="noStationsText">Tap "Find My Location" to see nearby stations</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div id="map">
+                <div style="text-align:center; padding:2rem; color:#263238;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#4fc3f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1rem; display:block;">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    <h3 style="margin-bottom:0.5rem;" id="mapTitle">Sabaai Water Map</h3>
+                    <p style="font-size:0.9rem; color:#78909c;" id="mapSubtitle">Tap "Find My Location" to activate map</p>
+                </div>
+            </div>
+            
+            <!-- Retractable Price Legend Button -->
+            <button class="legend-toggle" id="legendToggle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+                <span id="legendToggleText">Price Legend</span>
+            </button>
+            
+            <!-- Retractable Price Legend -->
+            <div class="legend" id="priceLegend">
+                <h3 id="legendTitle">Price Legend</h3>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color:#66bb6a;"></div>
+                    <span id="priceRange1">฿0.50-0.70 per liter</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color:#ffa726;"></div>
+                    <span id="priceRange2">฿0.70-0.90 per liter</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color:#ef5350;"></div>
+                    <span id="priceRange3">฿0.90-1.00 per liter</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal-overlay" id="reviewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="reviewModalTitle">Add Review</h3>
+                <button class="modal-close" id="closeReviewModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="reviewStationId">
+                
+                <div class="form-group">
+                    <label class="form-label" for="reviewRating" id="ratingLabel">Rating</label>
+                    <div class="rating-control" id="ratingControl">
+                        <span class="rating-star" data-value="1">★</span>
+                        <span class="rating-star" data-value="2">★</span>
+                        <span class="rating-star" data-value="3">★</span>
+                        <span class="rating-star" data-value="4">★</span>
+                        <span class="rating-star" data-value="5">★</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="reviewTitle" id="titleLabel">Title</label>
+                    <input type="text" class="form-control" id="reviewTitle" placeholder="Enter a title for your review">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="reviewContent" id="contentLabel">Review</label>
+                    <textarea class="form-control" id="reviewContent" placeholder="Share your experience with this station..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" id="conditionLabel">Station Condition</label>
+                    <div class="condition-tags">
+                        <span class="condition-tag" data-condition="working">✅ Working Well</span>
+                        <span class="condition-tag" data-condition="filter">🔄 Filter Changed Recently</span>
+                        <span class="condition-tag" data-condition="jammed">🪙 Coin Slot Jammed</span>
+                        <span class="condition-tag" data-condition="broken">❌ Out of Service</span>
+                        <span class="condition-tag" data-condition="dirty">🧹 Needs Cleaning</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <div class="photo-upload" id="photoUpload">
+                        <div class="photo-upload-icon">📷</div>
+                        <p id="uploadPhotoText">Upload Photo of Station</p>
+                        <input type="file" id="photoInput" accept="image/*" capture="environment" style="display: none;">
+                    </div>
+                    <div class="photo-preview" id="photoPreview">
+                        <img id="previewImage" src="" alt="Preview">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel" id="cancelReview">Cancel</button>
+                <button class="btn btn-submit" id="submitReview">Submit Review</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Comprehensive translation dictionary for 12 languages with updated pricing
+        const translations = {
+            en: {
+                pageSubtitle: "Find reverse osmosis water stations within 2km radius",
+                locateMeText: "Find My Location",
+                searchPlaceholder: "Search for stations...",
+                getDirections: "Get Directions",
+                addReview: "Add Review",
+                viewReviews: "View Reviews",
+                noStationsText: "Tap \"Find My Location\" to see nearby stations",
+                mapTitle: "Sabaai Water Map",
+                mapSubtitle: "Tap \"Find My Location\" to activate map",
+                legendTitle: "Price Legend",
+                priceRange1: "฿0.50-0.70 per liter",
+                priceRange2: "฿0.70-0.90 per liter",
+                priceRange3: "฿0.90-1.00 per liter",
+                legendToggleText: "Price Legend",
+                reviewModalTitle: "Add Review",
+                ratingLabel: "Rating",
+                titleLabel: "Title",
+                contentLabel: "Review",
+                conditionLabel: "Station Condition",
+                uploadPhotoText: "Upload Photo of Station",
+                submitReview: "Submit Review",
+                cancel: "Cancel",
+                reviewSubmitted: "Review submitted successfully!",
+                photoTooLarge: "Photo is too large. Please select a smaller image.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            th: {
+                pageSubtitle: "ค้นหาสถานีน้ำออสโมซิสย้อนกลับภายในรัศมี 2 กิโลเมตร",
+                locateMeText: "ค้นหาตำแหน่งของฉัน",
+                searchPlaceholder: "ค้นหาสถานี...",
+                getDirections: "ขอเส้นทาง",
+                addReview: "เพิ่มรีวิว",
+                viewReviews: "ดูรีวิว",
+                noStationsText: "แตะ \"ค้นหาตำแหน่งของฉัน\" เพื่อดูสถานีใกล้เคียง",
+                mapTitle: "แผนที่น้ำสบาย",
+                mapSubtitle: "แตะ \"ค้นหาตำแหน่งของฉัน\" เพื่อเปิดใช้งานแผนที่",
+                legendTitle: "คำอธิบายราคา",
+                priceRange1: "฿0.50-0.70 ต่อลิตร",
+                priceRange2: "฿0.70-0.90 ต่อลิตร",
+                priceRange3: "฿0.90-1.00 ต่อลิตร",
+                legendToggleText: "คำอธิบายราคา",
+                reviewModalTitle: "เพิ่มรีวิว",
+                ratingLabel: "คะแนน",
+                titleLabel: "หัวข้อ",
+                contentLabel: "รีวิว",
+                conditionLabel: "สภาพสถานี",
+                uploadPhotoText: "อัปโหลดรูปภาพของสถานี",
+                submitReview: "ส่งรีวิว",
+                cancel: "ยกเลิก",
+                reviewSubmitted: "ส่งรีวิวเรียบร้อยแล้ว!",
+                photoTooLarge: "รูปภาพมีขนาดใหญ่เกินไป กรุณาเลือกรูปภาพที่มีขนาดเล็กกว่า",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            zh: {
+                pageSubtitle: "查找半径2公里范围内的反渗透水站",
+                locateMeText: "查找我的位置",
+                searchPlaceholder: "搜索站点...",
+                getDirections: "获取路线",
+                addReview: "添加评价",
+                viewReviews: "查看评价",
+                noStationsText: "点击\"查找我的位置\"查看附近的站点",
+                mapTitle: "萨拜水地图",
+                mapSubtitle: "点击\"查找我的位置\"激活地图",
+                legendTitle: "价格图例",
+                priceRange1: "฿0.50-0.70 每升",
+                priceRange2: "฿0.70-0.90 每升",
+                priceRange3: "฿0.90-1.00 每升",
+                legendToggleText: "价格图例",
+                reviewModalTitle: "添加评价",
+                ratingLabel: "评分",
+                titleLabel: "标题",
+                contentLabel: "评价内容",
+                conditionLabel: "站点状况",
+                uploadPhotoText: "上传站点照片",
+                submitReview: "提交评价",
+                cancel: "取消",
+                reviewSubmitted: "评价提交成功！",
+                photoTooLarge: "照片太大，请选择较小的图片。",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            ko: {
+                pageSubtitle: "2km 반경 내의 역삼투수 정수기 찾기",
+                locateMeText: "내 위치 찾기",
+                searchPlaceholder: "정수기 검색...",
+                getDirections: "길찾기",
+                addReview: "리뷰 추가",
+                viewReviews: "리뷰 보기",
+                noStationsText: "\"내 위치 찾기\"를 탭하여 근처 정수기를 확인하세요",
+                mapTitle: "사바이 워터 맵",
+                mapSubtitle: "\"내 위치 찾기\"를 탭하여 맵 활성화",
+                legendTitle: "가격 범례",
+                priceRange1: "리터당 ฿0.50-0.70",
+                priceRange2: "리터당 ฿0.70-0.90",
+                priceRange3: "리터당 ฿0.90-1.00",
+                legendToggleText: "가격 범례",
+                reviewModalTitle: "리뷰 추가",
+                ratingLabel: "평점",
+                titleLabel: "제목",
+                contentLabel: "리뷰",
+                conditionLabel: "정수기 상태",
+                uploadPhotoText: "정수기 사진 업로드",
+                submitReview: "리뷰 제출",
+                cancel: "취소",
+                reviewSubmitted: "리뷰가 성공적으로 제출되었습니다!",
+                photoTooLarge: "사진이 너무 큽니다. 더 작은 이미지를 선택해주세요.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            ja: {
+                pageSubtitle: "半径2km以内の逆浸透膜浄水ステーションを探す",
+                locateMeText: "現在地を検索",
+                searchPlaceholder: "ステーションを検索...",
+                getDirections: "ルート案内",
+                addReview: "レビューを追加",
+                viewReviews: "レビューを表示",
+                noStationsText: "「現在地を検索」をタップして近くのステーションを表示",
+                mapTitle: "サバイウォーターマップ",
+                mapSubtitle: "「現在地を検索」をタップしてマップを有効化",
+                legendTitle: "価格の凡例",
+                priceRange1: "1リットルあたり฿0.50-0.70",
+                priceRange2: "1リットルあたり฿0.70-0.90",
+                priceRange3: "1リットルあたり฿0.90-1.00",
+                legendToggleText: "価格の凡例",
+                reviewModalTitle: "レビューを追加",
+                ratingLabel: "評価",
+                titleLabel: "タイトル",
+                contentLabel: "レビュー",
+                conditionLabel: "ステーションの状態",
+                uploadPhotoText: "ステーションの写真をアップロード",
+                submitReview: "レビューを送信",
+                cancel: "キャンセル",
+                reviewSubmitted: "レビューが正常に送信されました！",
+                photoTooLarge: "写真が大きすぎます。小さい画像を選択してください。",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            ru: {
+                pageSubtitle: "Найдите станции обратного осмоса в радиусе 2 км",
+                locateMeText: "Найти мое местоположение",
+                searchPlaceholder: "Поиск станций...",
+                getDirections: "Построить маршрут",
+                addReview: "Добавить отзыв",
+                viewReviews: "Просмотреть отзывы",
+                noStationsText: "Нажмите \"Найти мое местоположение\", чтобы увидеть ближайшие станции",
+                mapTitle: "Карта воды Sabaai",
+                mapSubtitle: "Нажмите \"Найти мое местоположение\", чтобы активировать карту",
+                legendTitle: "Легенда цен",
+                priceRange1: "฿0.50-0.70 за литр",
+                priceRange2: "฿0.70-0.90 за литр",
+                priceRange3: "฿0.90-1.00 за литр",
+                legendToggleText: "Легенда цен",
+                reviewModalTitle: "Добавить отзыв",
+                ratingLabel: "Рейтинг",
+                titleLabel: "Заголовок",
+                contentLabel: "Отзыв",
+                conditionLabel: "Состояние станции",
+                uploadPhotoText: "Загрузить фото станции",
+                submitReview: "Отправить отзыв",
+                cancel: "Отмена",
+                reviewSubmitted: "Отзыв успешно отправлен!",
+                photoTooLarge: "Фото слишком большое. Пожалуйста, выберите изображение меньшего размера.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            fr: {
+                pageSubtitle: "Trouvez les stations d'osmose inverse dans un rayon de 2 km",
+                locateMeText: "Trouver ma position",
+                searchPlaceholder: "Rechercher des stations...",
+                getDirections: "Obtenir l'itinéraire",
+                addReview: "Ajouter un avis",
+                viewReviews: "Voir les avis",
+                noStationsText: "Appuyez sur \"Trouver ma position\" pour voir les stations à proximité",
+                mapTitle: "Carte Sabaai Water",
+                mapSubtitle: "Appuyez sur \"Trouver ma position\" pour activer la carte",
+                legendTitle: "Légende des prix",
+                priceRange1: "฿0.50-0.70 par litre",
+                priceRange2: "฿0.70-0.90 par litre",
+                priceRange3: "฿0.90-1.00 par litre",
+                legendToggleText: "Légende des prix",
+                reviewModalTitle: "Ajouter un avis",
+                ratingLabel: "Note",
+                titleLabel: "Titre",
+                contentLabel: "Avis",
+                conditionLabel: "État de la station",
+                uploadPhotoText: "Télécharger une photo de la station",
+                submitReview: "Soumettre l'avis",
+                cancel: "Annuler",
+                reviewSubmitted: "Avis soumis avec succès !",
+                photoTooLarge: "La photo est trop volumineuse. Veuillez sélectionner une image plus petite.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            es: {
+                pageSubtitle: "Encuentre estaciones de ósmosis inversa dentro de un radio de 2 km",
+                locateMeText: "Encontrar mi ubicación",
+                searchPlaceholder: "Buscar estaciones...",
+                getDirections: "Obtener direcciones",
+                addReview: "Añadir reseña",
+                viewReviews: "Ver reseñas",
+                noStationsText: "Toque \"Encontrar mi ubicación\" para ver estaciones cercanas",
+                mapTitle: "Mapa Sabaai Water",
+                mapSubtitle: "Toque \"Encontrar mi ubicación\" para activar el mapa",
+                legendTitle: "Leyenda de precios",
+                priceRange1: "฿0.50-0.70 por litro",
+                priceRange2: "฿0.70-0.90 por litro",
+                priceRange3: "฿0.90-1.00 por litro",
+                legendToggleText: "Leyenda de precios",
+                reviewModalTitle: "Añadir reseña",
+                ratingLabel: "Calificación",
+                titleLabel: "Título",
+                contentLabel: "Reseña",
+                conditionLabel: "Condición de la estación",
+                uploadPhotoText: "Subir foto de la estación",
+                submitReview: "Enviar reseña",
+                cancel: "Cancelar",
+                reviewSubmitted: "¡Reseña enviada con éxito!",
+                photoTooLarge: "La foto es demasiado grande. Por favor, seleccione una imagen más pequeña.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            pt: {
+                pageSubtitle: "Encontre estações de osmose reversa dentro de um raio de 2 km",
+                locateMeText: "Encontrar minha localização",
+                searchPlaceholder: "Pesquisar estações...",
+                getDirections: "Obter direções",
+                addReview: "Adicionar avaliação",
+                viewReviews: "Ver avaliações",
+                noStationsText: "Toque em \"Encontrar minha localização\" para ver estações próximas",
+                mapTitle: "Mapa Sabaai Water",
+                mapSubtitle: "Toque em \"Encontrar minha localização\" para ativar o mapa",
+                legendTitle: "Legenda de preços",
+                priceRange1: "฿0.50-0.70 por litro",
+                priceRange2: "฿0.70-0.90 por litro",
+                priceRange3: "฿0.90-1.00 por litro",
+                legendToggleText: "Legenda de preços",
+                reviewModalTitle: "Adicionar avaliação",
+                ratingLabel: "Avaliação",
+                titleLabel: "Título",
+                contentLabel: "Avaliação",
+                conditionLabel: "Condição da estação",
+                uploadPhotoText: "Carregar foto da estação",
+                submitReview: "Enviar avaliação",
+                cancel: "Cancelar",
+                reviewSubmitted: "Avaliação enviada com sucesso!",
+                photoTooLarge: "A foto é muito grande. Por favor, selecione uma imagem menor.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            it: {
+                pageSubtitle: "Trova stazioni ad osmosi inversa entro un raggio di 2 km",
+                locateMeText: "Trova la mia posizione",
+                searchPlaceholder: "Cerca stazioni...",
+                getDirections: "Ottieni indicazioni",
+                addReview: "Aggiungi recensione",
+                viewReviews: "Visualizza recensioni",
+                noStationsText: "Tocca \"Trova la mia posizione\" per vedere le stazioni vicine",
+                mapTitle: "Mappa Sabaai Water",
+                mapSubtitle: "Tocca \"Trova la mia posizione\" per attivare la mappa",
+                legendTitle: "Legenda prezzi",
+                priceRange1: "฿0.50-0.70 al litro",
+                priceRange2: "฿0.70-0.90 al litro",
+                priceRange3: "฿0.90-1.00 al litro",
+                legendToggleText: "Legenda prezzi",
+                reviewModalTitle: "Aggiungi recensione",
+                ratingLabel: "Valutazione",
+                titleLabel: "Titolo",
+                contentLabel: "Recensione",
+                conditionLabel: "Condizione della stazione",
+                uploadPhotoText: "Carica foto della stazione",
+                submitReview: "Invia recensione",
+                cancel: "Annulla",
+                reviewSubmitted: "Recensione inviata con successo!",
+                photoTooLarge: "La foto è troppo grande. Seleziona un'immagine più piccola.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            de: {
+                pageSubtitle: "Finden Sie Umkehrosmose-Stationen im Umkreis von 2 km",
+                locateMeText: "Meinen Standort finden",
+                searchPlaceholder: "Stationen suchen...",
+                getDirections: "Wegbeschreibung",
+                addReview: "Bewertung hinzufügen",
+                viewReviews: "Bewertungen anzeigen",
+                noStationsText: "Tippen Sie auf \"Meinen Standort finden\", um nahegelegene Stationen zu sehen",
+                mapTitle: "Sabaai Water Karte",
+                mapSubtitle: "Tippen Sie auf \"Meinen Standort finden\", um die Karte zu aktivieren",
+                legendTitle: "Preislegende",
+                priceRange1: "฿0.50-0.70 pro Liter",
+                priceRange2: "฿0.70-0.90 pro Liter",
+                priceRange3: "฿0.90-1.00 pro Liter",
+                legendToggleText: "Preislegende",
+                reviewModalTitle: "Bewertung hinzufügen",
+                ratingLabel: "Bewertung",
+                titleLabel: "Titel",
+                contentLabel: "Bewertung",
+                conditionLabel: "Zustand der Station",
+                uploadPhotoText: "Foto der Station hochladen",
+                submitReview: "Bewertung absenden",
+                cancel: "Abbrechen",
+                reviewSubmitted: "Bewertung erfolgreich abgesendet!",
+                photoTooLarge: "Das Foto ist zu groß. Bitte wählen Sie ein kleineres Bild aus.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            },
+            ar: {
+                pageSubtitle: "ابحث عن محطات مياه التناضح العكسي ضمن نطاق 2 كم",
+                locateMeText: "اعثر على موقعي",
+                searchPlaceholder: "البحث عن المحطات...",
+                getDirections: "الحصول على الاتجاهات",
+                addReview: "إضافة تقييم",
+                viewReviews: "عرض التقييمات",
+                noStationsText: "انقر على \"اعثر على موقعي\" لرؤية المحطات القريبة",
+                mapTitle: "خريطة ساباي للمياه",
+                mapSubtitle: "انقر على \"اعثر على موقعي\" لتفعيل الخريطة",
+                legendTitle: "مفتاح الأسعار",
+                priceRange1: "0.50-0.70 بات للتر",
+                priceRange2: "0.70-0.90 بات للتر",
+                priceRange3: "0.90-1.00 بات للتر",
+                legendToggleText: "مفتاح الأسعار",
+                reviewModalTitle: "إضافة تقييم",
+                ratingLabel: "التقييم",
+                titleLabel: "العنوان",
+                contentLabel: "التقييم",
+                conditionLabel: "حالة المحطة",
+                uploadPhotoText: "رفع صورة للمحطة",
+                submitReview: "إرسال التقييم",
+                cancel: "إلغاء",
+                reviewSubmitted: "تم إرسال التقييم بنجاح!",
+                photoTooLarge: "الصورة كبيرة جدًا. يرجى اختيار صورة أصغر.",
+                languageNames: {
+                    en: "English",
+                    th: "ไทย",
+                    zh: "中文",
+                    ko: "한국어",
+                    ja: "日本語",
+                    ru: "Русский",
+                    fr: "Français",
+                    es: "Español",
+                    pt: "Português",
+                    it: "Italiano",
+                    de: "Deutsch",
+                    ar: "العربية"
+                }
+            }
+        };
+
+        // Current language
+        let currentLang = 'en';
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up language dropdown
+            setupLanguageDropdown();
+            
+            // Set up price legend toggle
+            setupPriceLegendToggle();
+            
+            // Display initial content
+            updateContent();
+            
+            // Initialize search functionality
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
+            
+            // Initialize locate me button
+            document.getElementById('locateMe').addEventListener('click', handleLocateMe);
+            
+            // Set up review modal
+            setupReviewModal();
+        });
+
+        function setupLanguageDropdown() {
+            const langToggle = document.getElementById('langToggle');
+            const langDropdown = document.getElementById('langDropdown');
+            const currentLanguageEl = document.getElementById('currentLanguage');
+            
+            langToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                langDropdown.classList.toggle('show');
+                this.classList.toggle('expanded');
+            });
+            
+            document.addEventListener('click', function(event) {
+                if (!langToggle.contains(event.target) && !langDropdown.contains(event.target)) {
+                    langDropdown.classList.remove('show');
+                    langToggle.classList.remove('expanded');
+                }
+            });
+            
+            const langOptions = langDropdown.querySelectorAll('.lang-option');
+            langOptions.forEach(option => {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                    
+                    langOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentLanguageEl.textContent = translations[lang].languageNames[lang];
+                    
+                    langDropdown.classList.remove('show');
+                    langToggle.classList.remove('expanded');
+                });
+            });
+        }
+
+        function setupPriceLegendToggle() {
+            const legendToggle = document.getElementById('legendToggle');
+            const priceLegend = document.getElementById('priceLegend');
+            
+            legendToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                priceLegend.classList.toggle('show');
+                this.classList.toggle('expanded');
+            });
+            
+            // Close legend when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!legendToggle.contains(event.target) && !priceLegend.contains(event.target)) {
+                    priceLegend.classList.remove('show');
+                    legendToggle.classList.remove('expanded');
+                }
+            });
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            updateContent();
+        }
+
+        function updateContent() {
+            // Update all text elements
+            document.getElementById('pageSubtitle').textContent = translations[currentLang].pageSubtitle;
+            document.getElementById('locateMeText').textContent = translations[currentLang].locateMeText;
+            document.getElementById('searchInput').placeholder = translations[currentLang].searchPlaceholder;
+            document.getElementById('noStationsText').textContent = translations[currentLang].noStationsText;
+            document.getElementById('mapTitle').textContent = translations[currentLang].mapTitle;
+            document.getElementById('mapSubtitle').textContent = translations[currentLang].mapSubtitle;
+            document.getElementById('legendTitle').textContent = translations[currentLang].legendTitle;
+            document.getElementById('priceRange1').textContent = translations[currentLang].priceRange1;
+            document.getElementById('priceRange2').textContent = translations[currentLang].priceRange2;
+            document.getElementById('priceRange3').textContent = translations[currentLang].priceRange3;
+            document.getElementById('legendToggleText').textContent = translations[currentLang].legendToggleText;
+            document.getElementById('reviewModalTitle').textContent = translations[currentLang].reviewModalTitle;
+            document.getElementById('ratingLabel').textContent = translations[currentLang].ratingLabel;
+            document.getElementById('titleLabel').textContent = translations[currentLang].titleLabel;
+            document.getElementById('contentLabel').textContent = translations[currentLang].contentLabel;
+            document.getElementById('conditionLabel').textContent = translations[currentLang].conditionLabel;
+            document.getElementById('uploadPhotoText').textContent = translations[currentLang].uploadPhotoText;
+            document.getElementById('submitReview').textContent = translations[currentLang].submitReview;
+            document.getElementById('cancelReview').textContent = translations[currentLang].cancel;
+            
+            // Update document title
+            document.title = `Sabaai Water - ${translations[currentLang].languageNames[currentLang]}`;
+        }
+
+        function handleSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const stationList = document.getElementById('stationList');
+            
+            if (searchTerm.length > 0) {
+                // Generate random price between 0.50 and 1.00
+                const prices = [0.50, 0.60, 0.70, 0.80, 0.90, 1.00];
+                const randomPrice = prices[Math.floor(Math.random() * prices.length)];
+                
+                stationList.innerHTML = `
+                    <div style="padding:1rem; background:#f5f9ff; border-radius:8px; margin:0.5rem 0;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                            <div>
+                                <div style="font-weight:700; color:#0288d1;">${translations[currentLang].languageNames[currentLang]} Station</div>
+                                <div style="font-size:0.9rem; color:#78909c;">123 Example Road, Chiang Mai</div>
+                            </div>
+                            <div style="background:linear-gradient(135deg,#4fc3f7,#29b6f6); color:white; padding:0.25rem 0.5rem; border-radius:20px; font-weight:700;">฿${randomPrice.toFixed(2)}</div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin:0.5rem 0;">
+                            <div style="display:flex; gap:0.5rem; align-items:center;">
+                                <div style="color:#66bb6a; font-size:0.9rem;">★★★★★</div>
+                                <div style="font-size:0.85rem; color:#78909c;">${translations[currentLang].languageNames[currentLang]}: 0.5 km</div>
+                            </div>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button style="padding:0.5rem 1rem; background:#4fc3f7; color:white; border:none; border-radius:8px; font-size:0.85rem; cursor:pointer;">${translations[currentLang].getDirections}</button>
+                                <button style="padding:0.5rem 1rem; background:#e1f5fe; color:#0288d1; border:none; border-radius:8px; font-size:0.85rem; cursor:pointer;">${translations[currentLang].addReview}</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                stationList.innerHTML = `
+                    <div style="text-align:center; padding:2rem; color:#78909c;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 1rem; display:block;">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <p>${translations[currentLang].noStationsText}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function handleLocateMe() {
+            alert(`📍 ${translations[currentLang].locateMeText} - Location feature would activate here in a real app`);
+        }
+
+        function setupReviewModal() {
+            const reviewModal = document.getElementById('reviewModal');
+            const closeReviewModal = document.getElementById('closeReviewModal');
+            const cancelReview = document.getElementById('cancelReview');
+            const submitReview = document.getElementById('submitReview');
+            const photoUpload = document.getElementById('photoUpload');
+            const photoInput = document.getElementById('photoInput');
+            const photoPreview = document.getElementById('photoPreview');
+            const previewImage = document.getElementById('previewImage');
+            const ratingStars = document.querySelectorAll('.rating-star');
+            const conditionTags = document.querySelectorAll('.condition-tag');
+            
+            closeReviewModal.addEventListener('click', () => {
+                reviewModal.classList.remove('show');
+            });
+            
+            cancelReview.addEventListener('click', () => {
+                reviewModal.classList.remove('show');
+            });
+            
+            reviewModal.addEventListener('click', (e) => {
+                if (e.target === reviewModal) {
+                    reviewModal.classList.remove('show');
+                }
+            });
+            
+            photoUpload.addEventListener('click', () => {
+                photoInput.click();
+            });
+            
+            photoInput.addEventListener('change', (e) => {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImage.src = e.target.result;
+                        photoPreview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            ratingStars.forEach(star => {
+                star.addEventListener('click', () => {
+                    ratingStars.forEach(s => s.style.color = '#b0bec5');
+                    star.style.color = '#ffa726';
+                });
+            });
+            
+            conditionTags.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    tag.classList.toggle('selected');
+                });
+            });
+            
+            submitReview.addEventListener('click', () => {
+                alert(`✅ ${translations[currentLang].reviewSubmitted}`);
+                reviewModal.classList.remove('show');
+            });
+        }
+    </script>
 </body>
 </html>
